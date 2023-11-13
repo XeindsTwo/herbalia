@@ -1,0 +1,68 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.body {
+    font-family: $circe;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.4;
+    color: #242424;
+    background-color: $white;
+    position: relative;
+    overflow-x: hidden;
+
+    @include r($tablet) {
+        font-size: 16px;
+    }
+
+    &--active {
+        overflow: hidden;
+    }
+}
+
+.container {
+    max-width: 1450px;
+    width: 100%;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.logo {
+    transition: opacity .3s, outline .3s;
+    border-radius: 3px;
+    align-self: flex-start;
+
+    &:hover {
+        opacity: .5;
+    }
+
+    &:focus {
+        outline: 2px solid $accent;
+    }
+
+    &__img {
+        @include objectCoverBg;
+    }
+}
+
+.indent {
+    padding: 72px 0;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgba($accent, 0.2);
+}
+
+::-webkit-scrollbar-thumb,
+::selection {
+    background-color: $accent;
+}
+
+::selection {
+    color: $white;
+}
