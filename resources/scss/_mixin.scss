@@ -3,9 +3,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  @else {
+  } @else {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -26,14 +24,15 @@
   }
 }
 
+@mixin flex-column($gap: 0) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap + px;
+}
+
 @mixin flexBetween {
   display: flex;
   justify-content: space-between;
-}
-
-@mixin flex-column {
-  display: flex;
-  flex-direction: column;
 }
 
 @mixin flex-center {

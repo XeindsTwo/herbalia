@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{{asset('static/images/icons/favicon.svg')}}"
           type="images/x-icon"> @vite(['resources/scss/style.scss']) </head>
 <body class="body">
-<header class="header">
+<header class="header header--main">
     @include('fragments/header_top')
     <div class="header__content">
         <h1 class="header__title">
@@ -24,7 +24,7 @@
 <section class="products indent">
     <div class="container">
         <div class="products__header">
-            <h2 class="products__title">Доставка цветов в любую точку</h2>
+            <h2 class="products__title title">Доставка цветов в любую точку</h2>
             <ul class="products__benefits" aria-label="Наши преимущества">
                 <li class="products__benefits-item">Срочная доставка. Бесплатно</li>
                 <li class="products__benefits-item">Гарантия свежести</li>
@@ -33,4 +33,9 @@
             </ul>
         </div>
     </div>
-</section> @vite(['resources/js/app.js']) </body>
+</section>
+
+@include('fragments/contacts')
+@include('fragments/modals_header')
+@vite(['resources/js/app.js'])
+</body>

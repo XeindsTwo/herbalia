@@ -1,0 +1,48 @@
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  white-space: normal;
+  font-size: 16px;
+  margin-bottom: 48px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+  }
+
+  &__link {
+    line-height: 1.2;
+    font-weight: 500;
+    display: block;
+    color: #6b7170;
+
+    &--nav {
+      position: relative;
+      padding-bottom: 1px;
+      border-bottom: 1px solid transparent;
+      transition: color .3s, border .3s;
+
+      &:hover {
+        color: #232323;
+        border-color: #232323;
+      }
+
+      span {
+        &::before {
+          @include pseudo;
+          width: 8px;
+          height: 1px;
+          margin-right: 8px;
+          margin-left: 8px;
+          background: #e7bfc4;
+          right: 0;
+        }
+      }
+    }
+
+    &.active {
+      opacity: .75;
+      pointer-events: none;
+    }
+  }
+}

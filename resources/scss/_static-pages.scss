@@ -1,0 +1,61 @@
+.static {
+  &__title {
+    margin-bottom: 48px;
+  }
+
+  &__text {
+    @include flex-column(26);
+    max-width: 800px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.5;
+
+    .bottom {
+      margin-top: 26px;
+    }
+
+    b {
+      font-weight: 700;
+    }
+
+    a {
+      border-bottom: 1px solid $accent;
+      padding-bottom: 3px;
+      transition: color .3s, border .3s;
+
+      &:hover {
+        color: $accent;
+      }
+
+      &:active {
+        color: #3d1522;
+        border-bottom-color: #3d1522;
+      }
+    }
+  }
+
+  &__empty {
+    margin-top: -10px;
+    @include flex-column(23);
+  }
+
+  &__dots {
+    margin-top: -10px;
+    @include flex-column(15);
+
+    li {
+      position: relative;
+      display: flex;
+
+      &::before {
+        content: "•";
+        padding-right: 10px;
+        font-weight: 700;
+      }
+    }
+  }
+
+  &__indent {
+    margin-top: 30px;
+  }
+}
