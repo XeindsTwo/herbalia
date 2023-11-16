@@ -14,7 +14,7 @@
             <div class="header__info">
                 <span class="header__info-title">Ежедневно с 10:00 до 22:00</span>
                 <a class="header__info-phone" href="tel:+795062576050">8 (950) 625-76-50</a>
-                <a class="header__info-link" href="contacts">Еще контакты</a>
+                <a class="header__info-link" href="{{ route('contacts') }}">Еще контакты</a>
             </div>
             <a class="header__control" href="{{ route('control') }}">Контроль качества</a>
             <div class="header__actions">
@@ -33,28 +33,25 @@
                                 <a href="{{route('payment')}}" class="header__nav-link">Оплата</a>
                             </li>
                             <li class="header__item">
-                                <a href="/delivery/" class="header__nav-link">Доставка</a>
+                                <a href="{{route('delivery')}}" class="header__nav-link">Доставка</a>
                             </li>
                             <li class="header__item">
                                 <a href="/flower-care/" class="header__nav-link">Уход за цветами</a>
                             </li>
                             <li class="header__item">
-                                <a href="/guarantee/" class="header__nav-link">Гарантии</a>
+                                <a href="{{route('guarantee')}}" class="header__nav-link">Гарантии</a>
                             </li>
                             <li class="header__item">
-                                <a href="/how_order/" class="header__nav-link">Как заказать</a>
+                                <a href="{{route('howOrder')}}" class="header__nav-link">Как заказать</a>
                             </li>
                             <li class="header__item">
-                                <a href="/faq/" class="header__nav-link">Вопросы-ответы</a>
+                                <a href="{{route('faq')}}" class="header__nav-link">Вопросы-ответы</a>
                             </li>
                             <li class="header__item">
-                                <a href="/bonus-program/" class="header__nav-link">Бонусная программа</a>
+                                <a href="{{route('corporate')}}" class="header__nav-link">Корпоративным клиентам</a>
                             </li>
                             <li class="header__item">
-                                <a href="/corporate/" class="header__nav-link">Корпоративным клиентам</a>
-                            </li>
-                            <li class="header__item">
-                                <a href="/agreement/" class="header__nav-link">Пользовательское соглашение</a>
+                                <a href="{{route('agreement')}}" class="header__nav-link">Пользовательское соглашение</a>
                             </li>
                         </ul>
                     </nav>

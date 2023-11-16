@@ -32,4 +32,20 @@ Route::get('/guarantee', static function () {
 
 Route::get('/how_order', static function () {
     return view('how_order');
-})->name('how_order');
+})->name('howOrder');
+
+Route::get('/faq', static function () {
+    return view('faq');
+})->name('faq');
+
+Route::get('/corporate', static function () {
+    return view('corporate');
+})->name('corporate');
+
+Route::get('/agreement', static function () {
+    return view('agreement');
+})->name('agreement');
+
+Route::get('/flower-care', static function () {
+    return view('flower_care');
+})->name('flower-care');

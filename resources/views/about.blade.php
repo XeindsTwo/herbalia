@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-          content="Bloomify - ваш лучший выбор для заказа и доставки свежих цветов. Уникальные букеты и подарки для любого случая">
-    <title>Herbalia | Информация о компании</title>
-    <link rel="icon" href="{{asset('static/images/icons/favicon.svg')}}" type="images/x-icon">
-    <link rel="shortcut icon" href="{{asset('static/images/icons/favicon.svg')}}"
-          type="images/x-icon"> @vite(['resources/scss/style.scss']) </head>
+@include('fragments/head', ['title' => 'Информация о компании'])
 <body class="body">
 <header class="header header--not-main">
     @include('fragments/header_top')
 </header>
-<section class="static indent">
+<section class="static indent indent--breadcrumbs">
     <div class="container">
+        <ul class="breadcrumbs">
+            <li class="breadcrumbs__item">
+                <a class="breadcrumbs__link breadcrumbs__link--nav" href="{{route('index')}}">
+                    <span>
+                        Доставка цветов в Белореченск
+                    </span>
+                </a>
+            </li>
+            <li class="breadcrumbs__item">
+                <span class="breadcrumbs__link active">О компании</span>
+            </li>
+        </ul>
         <h1 class="static__title title">О компании</h1>
         <div class="static__text">
             <p>

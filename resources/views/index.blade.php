@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-          content="Bloomify - ваш лучший выбор для заказа и доставки свежих цветов. Уникальные букеты и подарки для любого случая">
-    <title>Herbalia</title>
-    <link rel="icon" href="{{asset('static/images/icons/favicon.svg')}}" type="images/x-icon">
-    <link rel="shortcut icon" href="{{asset('static/images/icons/favicon.svg')}}"
-          type="images/x-icon"> @vite(['resources/scss/style.scss']) </head>
+@include('fragments/head', ['title' => 'Доставка цветов | Купить букет цветов с доставкой в Белореченск'])
 <body class="body">
 <header class="header header--main">
     @include('fragments/header_top')
@@ -34,7 +23,10 @@
         </div>
     </div>
 </section>
-
+@include('home/popular_questions')
+@include('home/original')
+@include('home/possibilities')
+@include('home/guarantees')
 @include('fragments/contacts')
 @include('fragments/modals_header')
 @vite(['resources/js/app.js'])

@@ -9,29 +9,15 @@
   }
 
   &__content {
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
+    @include flex-column(26);
     max-width: 800px;
     line-height: 1.5;
   }
 
   ol {
-    counter-reset: ol-counter;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
     li {
-      counter-increment: ol-counter;
-      position: relative;
-      display: table;
-
       &::before {
-        content: counters(ol-counter, ".") ".";
-        color: currentColor;
-        font-weight: 700;
-        padding-right: 6px;
+        display: inline-table;
       }
     }
   }

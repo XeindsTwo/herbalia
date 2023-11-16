@@ -12,6 +12,14 @@
 @import 'components/menu-btn';
 @import 'components/contacts';
 
+// Home
+@import 'home/popular-questions';
+@import 'home/original';
+@import 'home/possibilities';
+@import 'home/delivery';
+@import 'home/guarantees';
+
 @import 'products';
 @import 'control';
 @import 'static-pages';
+@import 'care';

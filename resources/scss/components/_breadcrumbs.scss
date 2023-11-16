@@ -8,6 +8,20 @@
   &__item {
     display: flex;
     align-items: center;
+    position: relative;
+
+    &:not(:last-child) {
+      &::after {
+        @include pseudo;
+        position: static;
+        width: 8px;
+        height: 1px;
+        margin-right: 8px;
+        margin-left: 8px;
+        background: $accent;
+        right: 0;
+      }
+    }
   }
 
   &__link {
@@ -28,15 +42,7 @@
       }
 
       span {
-        &::before {
-          @include pseudo;
-          width: 8px;
-          height: 1px;
-          margin-right: 8px;
-          margin-left: 8px;
-          background: #e7bfc4;
-          right: 0;
-        }
+
       }
     }
 
