@@ -1,6 +1,6 @@
-<section class="guarantees">
+<section class="guarantees indent">
     <div class="container">
-        <h2 class="block-title">Наши гарантии</h2>
+        <h2 class="guarantees__title block-title">Наши гарантии</h2>
         <ul class="guarantees__list">
             <li class="guarantees__item">
                 <h3 class="guarantees__name">Фото букета перед доставкой</h3>

@@ -1,0 +1,180 @@
+.top-reviews {
+  &__inner {
+    display: flex;
+    gap: 50px;
+    @include r($desktop) {
+      gap: 35px;
+    }
+    @media (max-width: 1100px) {
+      flex-direction: column;
+    }
+    @include r($sm) {
+      gap: 20px;
+    }
+  }
+
+  &__img {
+    @include objectCoverBg;
+    object-fit: contain;
+    height: auto;
+    @include r($desktop) {
+      width: 420px;
+    }
+    @media (max-width: 1100px) {
+      margin: 0 auto;
+      width: 600px;
+    }
+    @include r($lg) {
+      width: 520px;
+    }
+    @include r($tablet) {
+      width: 440px;
+    }
+    @include r($sm) {
+      width: 400px;
+    }
+    @include r($phone) {
+      width: 360px;
+    }
+  }
+
+  &__content {
+    max-width: 650px;
+    width: 100%;
+    @media (max-width: 1100px) {
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
+
+  &__title {
+    margin-bottom: 55px;
+    @include r($desktop) {
+      margin-bottom: 45px;
+    }
+    @include r($sm) {
+      margin-bottom: 25px;
+    }
+  }
+
+  &__swiper {
+    cursor: grab;
+    width: 80%;
+    margin: 0 auto 48px;
+    @include r($desktop) {
+      width: 85%;
+    }
+    @media (max-width: 1100px) {
+      margin-bottom: 35px;
+    }
+    @include r($sm) {
+      width: 100%;
+    }
+  }
+
+  &__text {
+    @include line-clamp(6);
+    font-size: 20px;
+    font-style: italic;
+    color: #6b7170;
+    margin-bottom: 24px;
+    @include r($desktop) {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__name {
+    font-size: 16px;
+    @media (max-width: 1100px) {
+      display: block;
+      text-align: left;
+    }
+  }
+
+  &__navigation,
+  &__control {
+    display: flex;
+    align-items: center;
+  }
+
+  &__navigation {
+    gap: 50px;
+    @media (max-width: 1100px) {
+      justify-content: center;
+    }
+    @include r($sm) {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  &__control {
+    gap: 5px;
+  }
+
+  &__btn {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color .4s ease-in-out, box-shadow .4s ease-in-out;
+    @include r($sm) {
+      display: none;
+    }
+
+    &::before {
+      @include topLeft50;
+      @include pseudo;
+      @include bg;
+      width: 10px;
+      height: 20px;
+      background-image: url("/public/static/images/icons/arrow-swiper.svg");
+    }
+
+    &:hover {
+      background-color: $white;
+      box-shadow: 0 0 10px rgba(74, 74, 74, .1);
+    }
+
+    &--prev {
+      &::before {
+        transform: scaleX(-1) translate(50%, -50%);
+      }
+    }
+  }
+
+  &__digital {
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 500;
+    width: 75px;
+    color: #959c9b;
+    justify-content: center;
+    display: flex;
+    @include r($sm) {
+      display: none;
+    }
+  }
+
+  &__pagination {
+    display: none;
+    gap: 10px;
+    @include r($sm) {
+      display: flex;
+    }
+
+    .swiper-pagination-bullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #e7bfc4;
+      transition: all .4s;
+    }
+
+    .swiper-pagination-bullet-active {
+      background-color: #4e1528;
+    }
+  }
+}

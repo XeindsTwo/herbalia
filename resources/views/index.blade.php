@@ -23,11 +23,14 @@
         </div>
     </div>
 </section>
+@include('home/top_reviews')
 @include('home/popular_questions')
 @include('home/original')
 @include('home/possibilities')
+@include('home/delivery')
 @include('home/guarantees')
 @include('fragments/contacts')
 @include('fragments/modals_header')
 @vite(['resources/js/app.js'])
+@vite(['resources/js/main.js'])
 </body>

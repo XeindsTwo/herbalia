@@ -47,7 +47,10 @@ html {
 }
 
 .indent {
-  margin-top: 72px;
+  margin-top: 80px;
+  @include r($tablet) {
+    margin-top: 60px;
+  }
 
   &--breadcrumbs {
     margin-top: 34px;
@@ -67,6 +70,26 @@ html {
   font-weight: 500;
   color: #282828;
   margin-bottom: 46px;
+  @include r($desktop) {
+    font-size: 36px;
+    margin-bottom: 36px;
+  }
+  @include r($lg) {
+    font-size: 34px;
+  }
+  @include r($tablet) {
+    font-size: 32px;
+    margin-bottom: 28px;
+  }
+  @include r($sm) {
+    font-size: 30px;
+  }
+  @include r($phone) {
+    font-size: 28px;
+  }
+  @media (max-width: 360px) {
+    font-size: 26px;
+  }
 }
 
 ol {

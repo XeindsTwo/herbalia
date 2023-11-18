@@ -13,6 +13,7 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "@vitejs/plugin-vue": "^4.4.1"
+        "@vitejs/plugin-vue": "^4.4.1",
+        "swiper": "^11.0.4"
     }
 }
