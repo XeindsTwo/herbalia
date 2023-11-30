@@ -57,7 +57,7 @@
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 40px;
     counter-reset: step-counter;
-    max-width: 1000px;
+    max-width: 1060px;
     margin: 0 auto;
     @include r($desktop) {
       grid-gap: 30px;

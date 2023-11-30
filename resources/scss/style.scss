@@ -12,6 +12,8 @@
 @import 'components/menu-btn';
 @import 'components/contacts';
 @import 'components/form-elements';
+@import 'components/checkbox';
+@import 'components/modal';
 
 // Home
 @import 'home/top-reviews';
@@ -26,3 +28,6 @@
 @import 'static-pages';
 @import 'care';
 @import 'auth';
+@import 'error-page';
+
+@import 'admin/admin';

@@ -1,0 +1,46 @@
+.admin-category {
+  &__btn {
+    font-size: 16px;
+    height: 100%;
+    padding: 19px 40px;
+    border: 1px solid #959c9b;
+    line-height: 1;
+    transition: border .4s, opacity .4s, color .4s;
+    margin-bottom: 50px;
+    border-radius: 4px;
+
+    &:hover {
+      border-color: $accent;
+      color: $accent;
+    }
+
+    &:active {
+      opacity: .5;
+    }
+  }
+
+  &__info {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+  &__list {
+    @include flex-column(10);
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 800px;
+    border: 1px solid #3d1522;
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  &__name {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}

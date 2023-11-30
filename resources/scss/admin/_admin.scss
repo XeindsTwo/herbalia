@@ -1,0 +1,64 @@
+@import "admin-category";
+
+.admin {
+  padding-bottom: 30px;
+
+  &__header {
+    background-color: #202020;
+    color: $white;
+    padding: 30px 0;
+    margin-bottom: 60px;
+  }
+
+  &__navigation {
+    &-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    &-link {
+      transition: color .4s, opacity .4s;
+      font-size: 18px;
+      position: relative;
+
+      &--active {
+        pointer-events: none;
+      }
+
+      &::before {
+        @include pseudo;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: $accent;
+        transition: width .4s;
+      }
+
+      &:hover {
+        color: $accent;
+
+        &::before {
+          width: 100%;
+        }
+      }
+
+      &:active {
+        opacity: .6;
+      }
+    }
+  }
+
+  &__title {
+    font-size: 38px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+}

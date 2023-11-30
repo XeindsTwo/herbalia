@@ -200,6 +200,14 @@
     }
   }
 
+  &__list {
+    @include flex-column(8);
+  }
+
+  &__item {
+    display: flex;
+  }
+
   &__nav {
     z-index: -1;
     visibility: hidden;
@@ -226,7 +234,25 @@
       line-height: 1.2;
       display: flex;
       align-self: flex-start;
-      padding: 3px 0;
+      padding: 3px 0 2px;
+      position: relative;
+
+      &::before {
+        @include pseudo;
+        left: 0;
+        bottom: 1px;
+        width: 0;
+        background-color: $accent;
+        height: 1px;
+      }
+
+      &--active {
+        pointer-events: none;
+        color: $accent;
+        &::before {
+          width: 100%;
+        }
+      }
 
       &:hover {
         color: $accent;
@@ -235,12 +261,6 @@
       &:focus {
         opacity: .4;
       }
-    }
-  }
-
-  &__item {
-    &:not(:last-child) {
-      margin-bottom: 7px;
     }
   }
 

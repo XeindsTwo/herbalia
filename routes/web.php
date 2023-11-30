@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+include 'errors.php';
 
 Route::get('/', static function () {
     return view('index');
@@ -53,17 +51,3 @@ Route::get('/agreement', static function () {
 Route::get('/flower-care', static function () {
     return view('flower_care');
 })->name('flower-care');
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-
-Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
-
-Route::post('/check-email', function (Request $request) {
-    $email = $request->input('email');
-    $user = User::where('email', $email)->first();
-    return response()->json([
-        'exists' => !!$user,
-    ]);
-});

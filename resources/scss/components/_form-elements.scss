@@ -1,27 +1,32 @@
 .label {
+  font-size: 16px;
   display: block;
   margin-bottom: 5px;
   cursor: pointer;
 }
 
 .input {
-  padding: 20px 15px;
+  padding: 16px 15px;
   display: block;
+  max-width: 380px;
   width: 100%;
-  border-radius: 10px;
-  border: 2px solid $accent;
-  transition: border-color .3s;
+  border-radius: 8px;
+  border: 1px solid #b8c1c0;
+  background-color: $white;
+  transition: border .4s;
 
   &:hover {
-    border-color: $black;
+    border-color: #fca3ac;
   }
 }
 
 .error {
   color: #ff3939;
-  margin: 6px 0 4px;
   display: none;
   font-size: 16px;
+  &:not(:last-child) {
+    margin-bottom: 3px;
+  }
 
   &--active {
     display: block;

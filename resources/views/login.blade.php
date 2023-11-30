@@ -1,31 +1,48 @@
-@include('fragments/head', ['title' => 'Страница авторизации'])
+@include('fragments/head', ['title' => 'Авторизация'])
 <body class="body">
-<header class="header header--not-main">
-    @include('fragments/header_top')
-</header>
-<section class="auth indent">
+<section class="auth">
     <div class="container">
-        <div class="auth__content auth__content--small">
-            <h2 class="auth__title title">Авторизация</h2>
+        <div class="auth__content">
+            <a class="auth__logo logo" href="/">
+                <img class="logo" width="226" height="52" src="{{asset('static/images/icons/auth-logo.svg')}}"
+                     alt="логотип">
+            </a>
+            <a class="auth__back" href="/">
+                <svg width="22" height="12" viewBox="0 0 22 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.292786 6.69471C0.105315 6.50718 0 6.25288 0 5.98771C0 5.72255 0.105315 5.46824 0.292786 5.28071L5.29279 0.280712C5.48139 0.0985542 5.73399 -0.00224062 5.99619 3.78025e-05C6.25838 0.00231622 6.5092 0.107485 6.6946 0.292894C6.88001 0.478302 6.98518 0.729114 6.98746 0.991311C6.98974 1.25351 6.88894 1.50611 6.70679 1.69471L3.41379 4.98771H20.9998C21.265 4.98771 21.5194 5.09307 21.7069 5.28061C21.8944 5.46814 21.9998 5.7225 21.9998 5.98771C21.9998 6.25293 21.8944 6.50728 21.7069 6.69482C21.5194 6.88235 21.265 6.98771 20.9998 6.98771H3.41379L6.70679 10.2807C6.8023 10.373 6.87848 10.4833 6.93089 10.6053C6.9833 10.7273 7.01088 10.8585 7.01204 10.9913C7.01319 11.1241 6.98789 11.2558 6.93761 11.3787C6.88733 11.5016 6.81307 11.6132 6.71918 11.7071C6.62529 11.801 6.51364 11.8753 6.39074 11.9255C6.26784 11.9758 6.13616 12.0011 6.00339 12C5.87061 11.9988 5.73939 11.9712 5.61738 11.9188C5.49538 11.8664 5.38503 11.7902 5.29279 11.6947L0.292786 6.69471Z"
+                          fill="#4E1528"/>
+                </svg>
+                Вернуться на главную
+            </a>
+            <h2 class="auth__title">Вход в профиль</h2>
+            <p class="auth__text">Вы увидите историю заказов, будете иметь возможность оставлять отзывы и т.д.</p>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
-                <span class="error" id="authError">Неверно введена почта или пароль</span>
-                <ul class="auth__list auth__list--grid">
+                <span class="error @if($errors->has('login')) error--active @endif" id="authError">
+                    {{ $errors->first('login') ?? 'Неверно введен логин или пароль' }}
+                </span>
+                <ul class="auth__list">
                     <li class="auth__item">
-                        <label class="label" for="email">Email</label>
-                        <input class="input" id="email" type="text" name="email" placeholder="Введите email"
+                        <label class="label" for="login">Логин</label>
+                        <input class="input" name="login" id="login" type="text" placeholder="Введите логин"
                                value="{{ old('login') }}" required>
                     </li>
                     <li class="auth__item">
                         <label class="label" for="password">Пароль</label>
                         <input class="input" id="password" type="password" placeholder="Введите пароль" name="password"
-                               required>
+                               value="{{ old('password') }}" required>
                     </li>
                 </ul>
-                <button class="auth__btn" type="submit">Войти</button>
+                <span class="auth__link">
+                    Нет аккаунта? <a href="{{route('register')}}">Тогда зарегистрируйтесь</a>
+                </span>
+                <button class="auth__btn" id="loginBtn" type="submit">Войти</button>
             </form>
         </div>
+        <div class="auth__decor"></div>
     </div>
 </section>
-@vite(['resources/js/app.js'])
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>

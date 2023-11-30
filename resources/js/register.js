@@ -1,6 +1,55 @@
 $(document).ready(function () {
-    $('#email').on('blur', function () {
-        const email = $(this).val();
+    function validateName() {
+        const nameValue = $("#name").val();
+        const nameError = $("#nameError");
+        const nameMaxError = $("#nameMaxError");
+        const regex = /^[A-Za-zА-я\-]+$/;
+
+        if (nameValue.trim() === "") {
+            nameError.removeClass("error--active");
+            nameMaxError.removeClass("error--active");
+            return false;
+        }
+
+        if (!regex.test(nameValue)) {
+            nameError.addClass("error--active");
+            return false;
+        } else {
+            nameError.removeClass("error--active");
+        }
+
+        if (nameValue.length > 50) {
+            nameMaxError.addClass("error--active");
+            return false;
+        } else {
+            nameMaxError.removeClass("error--active");
+        }
+
+        return true;
+    }
+
+    function validateEmail() {
+        const emailValue = $("#email").val();
+        const emailError = $("#emailError");
+        const emailErrorParameters = $("#emailErrorParameters");
+        const emailLengthError = $("#emailLengthError");
+        const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+        let valid = true;
+
+        if (!regex.test(emailValue)) {
+            emailErrorParameters.addClass("error--active");
+            return false;
+        } else {
+            emailErrorParameters.removeClass("error--active");
+        }
+
+        if (emailValue.length > 80) {
+            emailLengthError.addClass("error--active");
+            return false;
+        } else {
+            emailLengthError.removeClass("error--active");
+        }
 
         $.ajax({
             headers: {
@@ -9,121 +58,145 @@ $(document).ready(function () {
             type: 'POST',
             url: '/check-email',
             data: {
-                email: email
+                email: emailValue
             },
             success: function (response) {
                 if (response.exists) {
-                    $('#emailError').addClass('error--active');
+                    emailError.addClass('error--active');
                 } else {
-                    $('#emailError').removeClass('error--active');
+                    emailError.removeClass('error--active');
                 }
             },
             error: function (xhr, status, error) {
                 console.error(error);
             }
         });
-    });
-});
 
-$(document).ready(function () {
-    const nameInput = $('#name');
-    const emailInput = $('#email');
-    const passwordInput = $('#password');
-    const passwordConfirmInput = $('#password_confirmation');
-    const registerButton = $('.auth__btn');
-
-    function validateName() {
-        const nameValue = nameInput.val().trim();
-        const nameError = $('#nameError');
-        const nameMinError = $('#nameMinError');
-        const nameMaxError = $('#nameMaxError');
-        const nameRegex = /^[A-Za-zА-яЁё\-]+$/;
-
-        if (nameValue.length < 2) {
-            nameMinError.addClass('error--active');
-        } else {
-            nameMinError.removeClass('error--active');
-        }
-
-        if (nameValue.length > 255) {
-            nameMaxError.addClass('error--active');
-        } else {
-            nameMaxError.removeClass('error--active');
-        }
-
-        if (!nameRegex.test(nameValue)) {
-            nameError.addClass('error--active');
-        } else {
-            nameError.removeClass('error--active');
-        }
+        return valid;
     }
 
-    function validateEmail() {
-        const emailValue = emailInput.val().trim();
-        const emailErrorParameters = $('#emailErrorParameters');
-        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    function validateLogin() {
+        const loginValue = $("#login").val();
+        const loginError = $("#loginError");
+        const loginCheckError = $("#loginCheckError");
+        const loginLengthError = $("#loginLengthError");
+        const loginMaxError = $("#loginMaxError");
 
-        if (!emailRegex.test(emailValue)) {
-            emailErrorParameters.addClass('error--active');
-        } else {
-            emailErrorParameters.removeClass('error--active');
+        if (loginValue.trim() === "") {
+            loginError.removeClass("error--active");
+            loginLengthError.removeClass("error--active");
+            return false;
         }
+
+        let valid = true;
+
+        if (/[А-я]/.test(loginValue) || !/^[a-zA-Z0-9_]+$/.test(loginValue)) {
+            loginError.addClass("error--active");
+            valid = false;
+        } else {
+            loginError.removeClass("error--active");
+        }
+
+        if (loginValue.length < 5) {
+            loginLengthError.addClass("error--active");
+            valid = false;
+        } else {
+            loginLengthError.removeClass("error--active");
+        }
+
+        if (loginValue.length > 60) {
+            loginMaxError.addClass("error--active");
+            valid = false;
+        } else {
+            loginMaxError.removeClass("error--active");
+        }
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            url: '/check-login',
+            data: {
+                login: loginValue
+            },
+            success: function (response) {
+                if (response.exists) {
+                    loginCheckError.addClass('error--active');
+                    updateSubmitButtonState();
+                } else {
+                    loginCheckError.removeClass('error--active');
+                    updateSubmitButtonState();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+
+        return valid;
     }
 
     function validatePassword() {
-        const passwordValue = passwordInput.val().trim();
-        const passwordError = $('#passwordError');
-        const passwordMinError = $('#passwordMinError');
-        const passwordRegex = /^[^\u0400-\u04FF\s]{8,}$/;
+        const passwordValue = $("#password").val();
+        const passwordError = $("#passwordError");
+        const passwordLengthError = $("#passwordLengthError");
+        const passwordMaxError = $("#passwordMaxError");
 
-        if (passwordValue.length < 8) {
-            passwordMinError.addClass('error--active');
-        } else {
-            passwordMinError.removeClass('error--active');
+        if (passwordValue.trim() === "") {
+            passwordError.removeClass("error--active");
+            passwordLengthError.removeClass("error--active");
+            passwordMaxError.removeClass("error--active");
+            return false;
         }
 
-        if (!passwordRegex.test(passwordValue)) {
-            passwordError.addClass('error--active');
+        let valid = true;
+
+        if (/[А-я]/.test(passwordValue)) {
+            passwordError.addClass("error--active");
+            valid = false;
         } else {
-            passwordError.removeClass('error--active');
+            passwordError.removeClass("error--active");
+        }
+
+        if (passwordValue.length < 5) {
+            passwordLengthError.addClass("error--active");
+            valid = false;
+        } else {
+            passwordLengthError.removeClass("error--active");
+        }
+
+        if (passwordValue.length > 60) {
+            passwordMaxError.addClass("error--active");
+            valid = false;
+        } else {
+            passwordMaxError.removeClass("error--active");
+        }
+
+        return valid;
+    }
+
+    function updateSubmitButtonState() {
+        const nameValid = validateName();
+        const emailValid = validateEmail();
+        const loginValid = validateLogin();
+        const passwordValid = validatePassword();
+        const submitButton = $("#registration-btn");
+
+        if (nameValid && emailValid && loginValid && passwordValid) {
+            submitButton.prop("disabled", false);
+            submitButton.css("opacity", "1");
+            submitButton.css("pointer-events", "auto");
+        } else {
+            submitButton.prop("disabled", true);
+            submitButton.css("opacity", "0.6");
+            submitButton.css("pointer-events", "none");
         }
     }
 
-    function validatePasswordConfirmation() {
-        const passwordValue = passwordInput.val().trim();
-        const passwordConfirmValue = passwordConfirmInput.val().trim();
-        const passwordConfirmError = $('#passwordConfirmError');
-
-        if (passwordValue !== passwordConfirmValue) {
-            passwordConfirmError.addClass('error--active');
-        } else {
-            passwordConfirmError.removeClass('error--active');
-        }
-    }
-
-    function validateForm() {
-        validateName();
-        validateEmail();
-        validatePassword();
-        validatePasswordConfirmation();
-
-        const hasErrors = $('.error--active').length > 0;
-
-        if (hasErrors) {
-            registerButton.removeClass('auth__btn--active');
-            registerButton.prop('disabled', true);
-        } else {
-            registerButton.addClass('auth__btn--active');
-            registerButton.prop('disabled', false);
-        }
-    }
-
-    nameInput.on('blur input', validateName);
-    emailInput.on('blur input', validateEmail);
-    passwordInput.on('blur input', validatePassword);
-    passwordConfirmInput.on('blur input', validatePasswordConfirmation);
-    nameInput.on('input', validateForm);
-    emailInput.on('input', validateForm);
-    passwordInput.on('input', validateForm);
-    passwordConfirmInput.on('input', validateForm);
+    $("#name").on("input", updateSubmitButtonState);
+    $("#email").on("input", updateSubmitButtonState);
+    $("#login").on("input", updateSubmitButtonState);
+    $("#password").on("input", updateSubmitButtonState);
+    updateSubmitButtonState();
 });
