@@ -34,7 +34,16 @@ class CategoryController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, Category $category): RedirectResponse
+    public function checkUniqueName(Request $request): JsonResponse
+    {
+        $name = $request->input('name');
+        $category = Category::where('name', $name)->first();
+        return response()->json([
+            'unique' => !$category,
+        ]);
+    }
+
+    public function update(Request $request, Category $category): JsonResponse
     {
         $validatedData = $request->validate([
             'name' => 'required|max:250|unique:categories,name,' . $category->getKey(),
@@ -42,8 +51,10 @@ class CategoryController extends Controller
         ]);
 
         $category->update($validatedData);
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Категория успешно обновлена');
+        return response()->json([
+            'category' => $category,
+            'message' => 'Категория успешно обновлена'
+        ], 200);
     }
 
     public function destroy(Category $category): JsonResponse

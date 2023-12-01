@@ -21,6 +21,22 @@
                 <li class="products__benefits-item">Бесплатная открытка</li>
             </ul>
         </div>
+        <ul class="products__items">
+            @foreach($categories as $category)
+                <li class="products-row__header">
+                    <h3 class="products-row__title">
+                        {{ $category->name }}
+                    </h3>
+                    <span class="products-row__extra-wrapper">
+                        <span class="products-row__subtitle">{{ $category->subtitle }}</span>
+                    <span class="products-row__extra">
+                        <span class="products__row-header__extra-item products__row-header__extra-item--type-price">от 2 400 ₽</span>
+                        <span class="products__row-header__extra-item products__row-header__extra-item--type-count">918 шт</span>
+                    </span>
+                    </span>
+                </li>
+            @endforeach
+        </ul>
     </div>
 </section>
 @include('home/top_reviews')

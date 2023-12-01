@@ -1,4 +1,8 @@
 .products {
+  &__header {
+    margin-bottom: 72px;
+  }
+
   &__title {
     margin-bottom: 28px;
   }
@@ -23,6 +27,41 @@
         height: 10px;
         background-image: url("/public/static/images/icons/check.svg");
       }
+    }
+  }
+
+  &__items {
+    @include flex-column(80);
+  }
+
+  &-row {
+    &__header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+    }
+
+    &__title {
+      line-height: 1.2;
+      font-size: 34px;
+      font-weight: 500;
+    }
+
+    &__extra-wrapper {
+      display: flex;
+      flex: 1;
+      font-size: 16px;
+      color: #6b7170;
+    }
+
+    &__extra {
+      margin-left: auto;
+      display: flex;
+      gap: 24px;
+      align-items: flex-end;
+      line-height: 1;
     }
   }
 }
