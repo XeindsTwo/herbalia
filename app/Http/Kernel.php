@@ -9,6 +9,7 @@ class Kernel extends HttpKernel
 {
     protected $routeMiddleware = [
         'admin' => AdminMiddleware::class,
+        'checkdb' => \App\Http\Middleware\CheckDatabaseConnection::class,
     ];
 
     protected $middleware = [

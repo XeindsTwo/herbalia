@@ -10,11 +10,22 @@
         @if($categories->isEmpty())
             <p class="admin-category__info">Категорий еще нет, но вы можете создать их</p>
         @else
+            <div class="admin-category__warning">
+                <span class="admin-category__icon">
+                    <img width="26" height="26" src="{{asset('static/images/icons/info.svg')}}" alt="предупреждение">
+                </span>
+                <div>
+                    <span class="admin-category__warning-title">Прочтите это</span>
+                    Если вы хотите изменить порядок элементов, то просто перетаскивайте их.
+                    Изменения вступят в силу сразу после одного перетаскивания
+                </div>
+            </div>
             <span class="admin-category__info">Ваши категории:</span>
-            <ul class="admin-category__list">
+            <ul class="admin-category__list" id="sortableList">
                 @foreach($categories as $category)
-                    <li class="admin-category__item">
+                    <li class="admin-category__item" data-category-id="{{$category->id}}">
                         <div class="admin-category__content">
+                            <span class="admin-category__index">Номер в порядке - {{$category->order_index}}</span>
                             <h3 class="admin-category__name">{{ $category->name }}</h3>
                             @if($category->subtitle)
                                 <p class="admin-category__text">{{ $category->subtitle }}</p>
@@ -59,8 +70,8 @@
     <button class="modal__close" id="modalCloseEditCategory" type="button"></button>
     <h3 class="modal__title" id="modalTitle">Редактирование категории</h3>
     <form action="{{ route('admin.categories.store') }}" method="POST">
-        <span class="error" id="nameUniqueError">Имя должно быть уникальным</span>
-        <span class="error" id="nameMaxError">Максимальное количество символов - 250</span>
+        <span class="error nameUniqueError" id="nameUniqueError">Имя должно быть уникальным</span>
+        <span class="error nameMaxError" id="nameMaxError">Максимальное количество символов - 250</span>
         @csrf
         <ul class="modal__list">
             <li class="modal__item">
@@ -87,5 +98,7 @@
         <button class="modal__btn modal__btn--confirm" id="confirmDeleteCategory" type="submit">Да, удалить</button>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 @vite(['resources/js/categories.js?type=module'])
+@vite(['resources/js/categories/dragging_categories.js'])
 </body>

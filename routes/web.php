@@ -4,10 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 include 'errors.php';
 
-Route::get('/', static function () {
-    return view('index');
-})->name('index');
-
 Route::get('/control', static function () {
     return view('quality_control');
 })->name('control');

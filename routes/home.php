@@ -3,4 +3,6 @@
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::group(['middleware' => 'checkdb'], static function () {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+});

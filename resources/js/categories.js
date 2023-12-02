@@ -90,6 +90,11 @@ function createCategoryElement(categoryData) {
     const categoryContent = document.createElement('div');
     categoryContent.classList.add('admin-category__content');
 
+    const categoryIndex = document.createElement('span');
+    categoryIndex.classList.add('admin-category__index');
+    categoryIndex.textContent = `Номер в порядке - ${categoryData.order_index}`;
+    categoryContent.appendChild(categoryIndex);
+
     const categoryName = document.createElement('h3');
     categoryName.classList.add('admin-category__name');
     categoryName.textContent = categoryData.name;
@@ -161,54 +166,67 @@ const updateCategoryText = (remainingCategories) => {
 };
 
 elements.editButtons.forEach(button => {
-    button.addEventListener('click', async function () {
-        const categoryId = button.dataset.categoryId;
-        const categoryName = button.dataset.categoryName;
-        const categorySubtitle = button.dataset.categorySubtitle;
+    const editBtnClickHandler = async () => {
+        try {
+            const categoryId = button.dataset.categoryId;
+            const categoryName = button.dataset.categoryName;
+            const categorySubtitle = button.dataset.categorySubtitle;
 
-        const modalEditCategory = document.getElementById('modalEditCategory');
-        const nameInput = modalEditCategory.querySelector('#name');
-        const subtitleInput = modalEditCategory.querySelector('#subtitle');
-        const editBtn = modalEditCategory.querySelector('#editBtn');
+            const modalEditCategory = document.getElementById('modalEditCategory');
+            const nameInput = modalEditCategory.querySelector('#name');
+            const subtitleInput = modalEditCategory.querySelector('#subtitle');
+            const editBtn = modalEditCategory.querySelector('#editBtn');
 
-        const form = modalEditCategory.querySelector('form');
-        form.action = `/admin/categories/${categoryId}`;
-        form.method = 'PUT';
+            const form = modalEditCategory.querySelector('form');
+            form.action = `/admin/categories/${categoryId}`;
+            form.method = 'PUT';
 
-        openModal(modalEditCategory);
-        nameInput.value = button.getAttribute('data-current-name') || categoryName;
-        subtitleInput.value = button.getAttribute('data-current-subtitle') || categorySubtitle;
+            openModal(modalEditCategory);
+            nameInput.value = button.getAttribute('data-current-name') || categoryName;
+            subtitleInput.value = button.getAttribute('data-current-subtitle') || categorySubtitle;
 
-        editBtn.addEventListener('click', async () => {
-            try {
-                const response = await fetch(form.action, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        name: nameInput.value,
-                        subtitle: subtitleInput.value
-                    })
-                });
+            const editButtonClickHandler = async (e) => {
+                try {
+                    e.preventDefault();
+                    if (await validateName()) {
+                        const response = await fetch(form.action, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                name: nameInput.value,
+                                subtitle: subtitleInput.value
+                            })
+                        });
 
-                if (response.ok) {
-                    button.setAttribute('data-current-name', nameInput.value);
-                    button.setAttribute('data-current-subtitle', subtitleInput.value);
+                        if (response.ok) {
+                            button.setAttribute('data-current-name', nameInput.value);
+                            button.setAttribute('data-current-subtitle', subtitleInput.value);
 
-                    closeModal(modalEditCategory);
-                    const categoryItem = button.closest('.admin-category__item');
-                    if (categoryItem) {
-                        const updatedName = nameInput.value;
-                        const updatedSubtitle = subtitleInput.value;
-                        categoryItem.querySelector('.admin-category__name').textContent = updatedName;
-                        categoryItem.querySelector('.admin-category__text').textContent = updatedSubtitle || '';
+                            closeModal(modalEditCategory);
+                            const categoryItem = button.closest('.admin-category__item');
+                            if (categoryItem) {
+                                const updatedName = nameInput.value;
+                                const updatedSubtitle = subtitleInput.value;
+                                categoryItem.querySelector('.admin-category__name').textContent = updatedName;
+                                categoryItem.querySelector('.admin-category__text').textContent = updatedSubtitle || '';
+                            }
+
+                            editBtn.removeEventListener('click', editButtonClickHandler);
+                        }
                     }
+                } catch (error) {
+                    console.error('Error:', error);
                 }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        });
-    });
+            };
+
+            editBtn.addEventListener('click', editButtonClickHandler);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    button.addEventListener('click', editBtnClickHandler);
 });

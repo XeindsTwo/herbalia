@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('order_index')->get();
         return view('index', compact('categories'));
     }
 }

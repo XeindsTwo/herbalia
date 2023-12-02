@@ -249,6 +249,7 @@
       &--active {
         pointer-events: none;
         color: $accent;
+
         &::before {
           width: 100%;
         }
@@ -332,7 +333,7 @@
   &__control {
     position: relative;
     align-self: flex-start;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
     transition: opacity .3s;
 
     &:hover {
