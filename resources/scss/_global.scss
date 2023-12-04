@@ -53,6 +53,10 @@ body {
   width: 100%;
   padding: 0 15px;
   margin: 0 auto;
+
+  &--admin {
+    max-width: 1450px;
+  }
 }
 
 .logo {
@@ -149,7 +153,7 @@ ol {
 
 ::-webkit-scrollbar-thumb,
 ::selection {
-  background-color: $accent;
+  background-color: #3d1522;
 }
 
 ::selection {

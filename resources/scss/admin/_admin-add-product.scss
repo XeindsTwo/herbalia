@@ -1,0 +1,29 @@
+.admin-add {
+  &__form {
+    background-color: #fff;
+    box-shadow: 0 6px 20px 0 rgba(53, 64, 71, 0.1);
+    padding: 40px 50px;
+    border-radius: 25px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 40px;
+
+    input {
+      max-width: 100%;
+    }
+  }
+
+  &__files {
+    display: flex;
+    flex-direction: column;
+  }
+}

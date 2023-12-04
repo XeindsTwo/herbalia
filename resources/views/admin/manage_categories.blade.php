@@ -4,7 +4,7 @@
     @include('fragments/header_admin')
 </header>
 <section class="admin">
-    <div class="container">
+    <div class="container container--admin">
         <div class="admin__wrapper">
             <h1 class="admin__title">Управление категориями</h1>
             <button class="admin__btn" id="addBtnCategory" type="button">Добавить категорию</button>

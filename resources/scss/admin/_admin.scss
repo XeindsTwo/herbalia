@@ -1,6 +1,7 @@
 @import 'admin-category';
 @import 'admin-products';
 @import 'admin-warning';
+@import 'admin-add-product';
 
 .admin {
   padding-bottom: 30px;
@@ -67,6 +68,10 @@
     font-size: 38px;
     margin-bottom: 20px;
     font-weight: 500;
+
+    &--bottom {
+      margin-bottom: 30px;
+    }
   }
 
   &__btn {

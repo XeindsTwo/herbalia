@@ -39,7 +39,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $article = mt_rand(2000, 200000);
+        $article = mt_rand(101000, 189999);
 
         $product = new Product([
             'name' => $request->input('name'),

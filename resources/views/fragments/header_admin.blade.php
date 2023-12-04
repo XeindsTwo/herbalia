@@ -1,5 +1,5 @@
 <div class="admin__navigation">
-    <div class="container">
+    <div class="container container--admin">
         <div class="admin__navigation-inner">
             <a class="logo" href="/">
                 <img class="logo" width="133" height="31" src="{{asset('static/images/icons/logo.svg')}}"
