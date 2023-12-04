@@ -7,7 +7,13 @@
             </a>
             <ul class="admin__navigation-list">
                 <li class="admin__navigation-item">
-                    <a class="admin__navigation-link" href="">Управление категориями</a>
+                    <a class="admin__navigation-link {{ request()->routeIs('admin.categories.index') ? 'admin__navigation-link--active' : '' }}"
+                       href="{{route('admin.categories.index')}}">
+                        Управление категориями
+                    </a>
+                </li>
+                <li class="admin__navigation-item">
+                    <a class="admin__navigation-link {{ request()->routeIs('admin.products.index') ? 'admin__navigation-link--active' : '' }}" href="{{route('admin.products.index')}}">Управление товарами</a>
                 </li>
             </ul>
         </div>

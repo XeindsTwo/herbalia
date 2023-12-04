@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to your application's "home" route.
-     *
-     * Typically, users are redirected here after authentication.
-     *
-     * @var string
-     */
     public const HOME = '/home';
 
     public function boot(): void
@@ -33,11 +26,13 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
             Route::middleware('web')
+                ->group(base_path('routes/home.php'));
+            Route::middleware('web')
                 ->group(base_path('routes/auth/auth.php'));
             Route::middleware('web')
-                ->group(base_path('routes/category.php'));
+                ->group(base_path('routes/admin/category.php'));
             Route::middleware('web')
-                ->group(base_path('routes/home.php'));
+                ->group(base_path('routes/admin/products.php'));
         });
     }
 }

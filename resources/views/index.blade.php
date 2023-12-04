@@ -23,18 +23,45 @@
         </div>
         <ul class="products__items">
             @foreach($categories as $category)
-                <li class="products-row__header">
-                    <h3 class="products-row__title">
-                        {{ $category->name }}
-                    </h3>
-                    <span class="products-row__extra-wrapper">
+                @if(!$categoryProducts[$category->id]->isEmpty())
+                    <li class="products-row__header">
+                        <h3 class="products-row__title">
+                            {{ $category->name }}
+                        </h3>
+                        <span class="products-row__extra-wrapper">
                         <span class="products-row__subtitle">{{ $category->subtitle }}</span>
                     <span class="products-row__extra">
-                        <span class="products__row-header__extra-item products__row-header__extra-item--type-price">от 2 400 ₽</span>
-                        <span class="products__row-header__extra-item products__row-header__extra-item--type-count">918 шт</span>
+                        <span class="products__row-header__extra-item products__row-header__extra-item--type-price">
+                            от {{number_format($categoryProducts[$category->id]->min('price'), 0, '.', ' ')}} ₽
+                        </span>
+                        <span class="products__row-header__extra-item products__row-header__extra-item--type-count">
+                            {{$categoryProducts[$category->id]->count()}} шт
+                        </span>
                     </span>
                     </span>
-                </li>
+                        <ul class="admin-products__list">
+                            @foreach($categoryProducts[$category->id] as $product)
+                                <li class="admin-products__card">
+                                    @foreach($product->images as $image)
+                                        @if($loop->first)
+                                            <a href="{{ route('product.show', ['id' => $product->id]) }}">
+                                                <img class="admin-products__img"
+                                                     src="{{asset('storage/' . $image->path)}}" height="360"
+                                                     alt="{{$product->name}}">
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                    <h3 class="admin-products__title">{{$product->name}}</h3>
+                                    <p class="admin-products__article">Артикул - {{$product->article}}</p>
+                                    <p class="admin-products__price">Цена:
+                                        {{ number_format($product->price, 0, '.', ' ') }} ₽
+                                    </p>
+                                    <p>{{$product->description}}</p>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endif
             @endforeach
         </ul>
     </div>

@@ -1,5 +1,7 @@
-import {closeModal, openModal, handleModalClose} from './components/modalFunctions.js';
-import {validateName} from './categories/validateName.js';
+import {closeModal, openModal, handleModalClose} from '../components/modal-functions.js';
+import {validateNameAddCategory, validateNameEditCategory} from './validate-name.js';
+import {updateCategoryContent} from "./update-category-content.js";
+import {updateSortableList} from "./dragging-categories.js";
 
 const elements = {
     addBtnCategory: document.getElementById('addBtnCategory'),
@@ -37,7 +39,7 @@ const deleteCategory = async (categoryId) => {
 
             closeModal(elements.modalDeleteCategory);
             const remainingCategories = document.querySelectorAll('.admin-category__item').length;
-            updateCategoryText(remainingCategories);
+            updateCategoryContent(remainingCategories);
         }
     } catch (error) {
         console.error('Error: ', error);
@@ -61,7 +63,7 @@ handleModalClose(elements.modalEditCategory);
 const form = document.querySelector('form');
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
-    if (await validateName()) {
+    if (await validateNameAddCategory()) {
         const formData = new FormData(form);
 
         try {
@@ -84,6 +86,8 @@ form.addEventListener('submit', async function (e) {
 });
 
 function createCategoryElement(categoryData) {
+    let categoryList = document.querySelector('.admin-category__list');
+
     const newCategory = document.createElement('li');
     newCategory.classList.add('admin-category__item');
 
@@ -132,8 +136,16 @@ function createCategoryElement(categoryData) {
     categoryActions.appendChild(deleteButton);
     newCategory.appendChild(categoryActions);
 
-    elements.categoryList.appendChild(newCategory);
-    updateCategoryText();
+    if (!categoryList) {
+        categoryList = document.createElement('ul');
+        categoryList.classList.add('admin-category__list');
+        categoryList.id = 'sortableList';
+        document.querySelector('.admin__wrapper').appendChild(categoryList);
+        updateSortableList();
+    }
+
+    categoryList.appendChild(newCategory);
+    updateCategoryContent();
 }
 
 elements.deleteButtons.forEach(button => {
@@ -155,16 +167,6 @@ elements.confirmDeleteBtn.addEventListener('click', async function () {
     closeModal(elements.modalDeleteCategory);
 });
 
-const updateCategoryText = (remainingCategories) => {
-    const infoText = document.querySelector('.admin-category__info');
-
-    if (remainingCategories === 0) {
-        infoText.textContent = 'Категорий еще нет, но вы можете создать их';
-    } else {
-        infoText.textContent = 'Ваши категории:';
-    }
-};
-
 elements.editButtons.forEach(button => {
     const editBtnClickHandler = async () => {
         try {
@@ -173,13 +175,14 @@ elements.editButtons.forEach(button => {
             const categorySubtitle = button.dataset.categorySubtitle;
 
             const modalEditCategory = document.getElementById('modalEditCategory');
-            const nameInput = modalEditCategory.querySelector('#name');
-            const subtitleInput = modalEditCategory.querySelector('#subtitle');
+            const nameInput = modalEditCategory.querySelector('#nameEdit');
+            const subtitleInput = modalEditCategory.querySelector('#subtitleEdit');
             const editBtn = modalEditCategory.querySelector('#editBtn');
 
             const form = modalEditCategory.querySelector('form');
             form.action = `/admin/categories/${categoryId}`;
             form.method = 'PUT';
+            editBtn.setAttribute('data-current-category-id', categoryId);
 
             openModal(modalEditCategory);
             nameInput.value = button.getAttribute('data-current-name') || categoryName;
@@ -188,7 +191,9 @@ elements.editButtons.forEach(button => {
             const editButtonClickHandler = async (e) => {
                 try {
                     e.preventDefault();
-                    if (await validateName()) {
+                    const currentCategoryId = editBtn.getAttribute('data-current-category-id');
+
+                    if (await validateNameEditCategory(currentCategoryId)) {
                         const response = await fetch(form.action, {
                             method: 'PUT',
                             headers: {
@@ -230,3 +235,5 @@ elements.editButtons.forEach(button => {
 
     button.addEventListener('click', editBtnClickHandler);
 });
+
+updateSortableList();

@@ -3,7 +3,7 @@
   align-items: center;
   cursor: pointer;
   transition: color 0.3s;
-  gap: 8px;
+  gap: 7px;
   position: relative;
   font-size: 16px;
 }
@@ -15,13 +15,13 @@
 }
 
 .custom-checkbox:hover .checkmark {
-  border-color: $accent;
+  border-color: #3d1522;
   background-color: transparent;
 }
 
 .custom-checkbox input:checked + .checkmark {
   background-color: transparent;
-  border-color: $accent;
+  border-color: #3d1522;
 }
 
 .custom-checkbox input:checked + .checkmark::after {
@@ -54,7 +54,7 @@
   position: absolute;
   width: 7px;
   height: 7px;
-  background-color: $accent;
+  background-color: #3d1522;
   opacity: 0;
   transition: opacity 0.3s;
 }

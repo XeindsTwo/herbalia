@@ -18,6 +18,11 @@
   &:hover {
     border-color: #fca3ac;
   }
+
+  &--textarea {
+    min-height: 160px;
+    resize: none;
+  }
 }
 
 .error {

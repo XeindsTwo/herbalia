@@ -1,4 +1,6 @@
-@import "admin-category";
+@import 'admin-category';
+@import 'admin-products';
+@import 'admin-warning';
 
 .admin {
   padding-bottom: 30px;
@@ -20,17 +22,13 @@
     &-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 25px;
+      gap: 20px 45px;
     }
 
     &-link {
       transition: color .4s, opacity .4s;
       font-size: 18px;
       position: relative;
-
-      &--active {
-        pointer-events: none;
-      }
 
       &::before {
         @include pseudo;
@@ -53,6 +51,15 @@
       &:active {
         opacity: .6;
       }
+
+      &--active {
+        pointer-events: none;
+        color: $accent;
+
+        &::before {
+          width: 100%;
+        }
+      }
     }
   }
 
@@ -60,5 +67,39 @@
     font-size: 38px;
     margin-bottom: 20px;
     font-weight: 500;
+  }
+
+  &__btn {
+    display: inline-block;
+    font-size: 16px;
+    height: 100%;
+    padding: 19px 40px;
+    border: 1px solid #959c9b;
+    line-height: 1;
+    transition: border .4s, background-color .4s, opacity .4s, color .4s;
+    margin-bottom: 50px;
+    border-radius: 4px;
+
+    &:hover {
+      border-color: $accent;
+      color: $accent;
+    }
+
+    &:active {
+      opacity: .5;
+    }
+
+    &--categories {
+      margin-bottom: 30px;
+
+      &:hover {
+        background-color: #3d1522;
+        border-color: transparent;
+      }
+    }
+  }
+
+  &__breadcrumbs {
+    margin-bottom: 20px;
   }
 }

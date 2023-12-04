@@ -18,6 +18,11 @@ class CategoryController extends Controller
         return view('admin.manage_categories', compact('categories'));
     }
 
+    public function getAllCategories(): array
+    {
+        return Category::all()->pluck('name', 'id')->toArray();
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
@@ -42,15 +47,20 @@ class CategoryController extends Controller
     {
         $name = $request->input('name');
         $category = Category::where('name', $name)->first();
+        if ($category && $category->id != $request->input('id')) {
+            return response()->json([
+                'unique' => false,
+            ]);
+        }
         return response()->json([
-            'unique' => !$category,
+            'unique' => true
         ]);
     }
 
     public function update(Request $request, Category $category): JsonResponse
     {
         $validatedData = $request->validate([
-            'name' => 'required|max:250|unique:categories,name,' . $category->getKey(),
+            'name' => 'required|max:250|unique:categories,name,' . $category->getKey() . ',id',
             'subtitle' => 'nullable|max:250'
         ]);
 
