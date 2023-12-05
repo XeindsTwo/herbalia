@@ -13,6 +13,10 @@
   pointer-events: none;
   transition: opacity .6s, transform .6s;
 
+  &--long {
+    max-width: 850px;
+  }
+
   &--active {
     transform: translate(-50%, -50%);
     opacity: 1;
@@ -71,6 +75,10 @@
   &__list {
     @include flex-column(25);
     margin-bottom: 30px;
+    &--grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   &__btn {

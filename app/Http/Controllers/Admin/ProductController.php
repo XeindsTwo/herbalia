@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -12,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -78,7 +80,8 @@ class ProductController extends Controller
     public function show(string $id): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
         $product = Product::findOrFail($id);
-        return view('product_detail', compact('product'));
+        $currentCategory = $product->category;
+        return view('product_detail', compact('product', 'currentCategory'));
     }
 
     public function edit(string $id)
@@ -91,9 +94,18 @@ class ProductController extends Controller
 
     }
 
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-
+        $product = Product::findOrFail($id);
+        if ($product) {
+            foreach ($product->images as $image) {
+                Storage::delete('public/photos/' . $image->name);
+            }
+            $product->delete();
+            return response()->json(['message' => 'Продукт был успешно удален']);
+        } else {
+            return response()->json(['message' => 'Продукт не был найден'], 404);
+        }
     }
 
     public function search(Request $request, $category_id): JsonResponse

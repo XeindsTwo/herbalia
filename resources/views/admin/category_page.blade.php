@@ -49,19 +49,28 @@
             @else
                 <ul class="admin-products__list">
                     @foreach($products as $product)
-                        <li class="admin-products__card">
-                            @foreach($product->images as $image)
-                                @if($loop->first)
-                                    <img class="admin-products__img" src="{{asset('storage/' . $image->path)}}"
-                                         height="360" alt="{{$product->name}}">
-                                @endif
-                            @endforeach
+                        <li class="admin-products__card" data-product-id="{{$product->id}}">
+                            <div class="admin-products__head">
+                                <div class="admin-products__actions">
+                                    <a class="admin-products__action admin-products__action--view"
+                                       href="{{route('product.show', ['id' => $product->id])}}" target="_blank">
+                                    </a>
+                                    <button class="admin-products__action admin-products__action--delete"
+                                            data-product-id="{{$product->id}}"></button>
+                                </div>
+                                @foreach($product->images as $image)
+                                    @if($loop->first)
+                                        <img class="admin-products__img" src="{{asset('storage/' . $image->path)}}"
+                                             height="360" alt="{{$product->name}}">
+                                    @endif
+                                @endforeach
+                            </div>
+                            <p class="admin-products__price">
+                                Цена: {{ number_format($product->price, 0, '.', ' ') }} ₽
+                            </p>
                             <h3 class="admin-products__title">{{$product->name}}</h3>
                             <p class="admin-products__article">Артикул - {{$product->article}}</p>
-                            <p class="admin-products__price">Цена:
-                                {{ number_format($product->price, 0, '.', ' ') }} ₽
-                            </p>
-                            <p>{{$product->description}}</p>
+                            <p>Описание: <br>{{$product->description}}</p>
                         </li>
                     @endforeach
                 </ul>
@@ -69,5 +78,17 @@
         </div>
     </div>
 </section>
+<div class="modal" id="modalDeleteProduct">
+    <button class="modal__close" id="modalCloseDeleteProduct" type="button"></button>
+    <h3 class="modal__title">Удаление товара</h3>
+    <p class="modal__text">
+        Вы действительно хотите удалить товар <span id="nameDeleteProduct"></span>? Удаление будет
+        невозможно отменить, все привязанные фотографии к товару будут удалены
+    </p>
+    <div class="modal__buttons">
+        <button class="modal__btn modal__btn--cancel" id="cancelDeleteProduct" type="button">Отменить</button>
+        <button class="modal__btn modal__btn--confirm" id="confirmDeleteProduct" type="submit">Да, удалить</button>
+    </div>
+</div>
 @vite(['resources/js/products/products.js?type=module'])
 </body>

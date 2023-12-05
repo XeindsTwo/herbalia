@@ -1,3 +1,80 @@
 .footer {
+  padding: 40px 0;
+  background-color: #282828;
+  color: $white;
 
+  &__content {
+    margin-bottom: 40px;
+    @include flex-column(60);
+  }
+
+  &__name {
+    font-size: 18px;
+    font-weight: 500;
+    display: inline-flex;
+    margin-bottom: 13px;
+    border-bottom: 1px solid;
+    line-height: 1.3;
+    color: #fca3ac;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 35px;
+  }
+
+  &__item {
+    display: flex;
+  }
+
+  &__link {
+    font-size: 16px;
+    align-self: flex-start;
+    padding: 5px 0;
+    font-weight: 500;
+    transition: color .4s;
+
+    &:hover {
+      color: $accent;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    gap: 80px;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: #999;
+
+    &-links {
+      @include flex-column(4);
+      font-size: 12px;
+    }
+
+    &-link {
+      transition: color .4s, opacity .4s;
+      padding: 3px 0;
+
+      &:hover {
+        color: $white;
+      }
+
+      &:active {
+        color: $accent;
+      }
+    }
+  }
+
+  &__author {
+    @include flex-column(6);
+  }
+
+  &__payments {
+    align-self: flex-end;
+    margin-left: auto;
+    display: flex;
+    gap: 7px;
+  }
 }

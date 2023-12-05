@@ -13,7 +13,12 @@
                     </a>
                 </li>
                 <li class="admin__navigation-item">
-                    <a class="admin__navigation-link {{ request()->routeIs('admin.products.index') ? 'admin__navigation-link--active' : '' }}" href="{{route('admin.products.index')}}">Управление товарами</a>
+                    <a class="admin__navigation-link {{ request()->routeIs('admin.products.index') ? 'admin__navigation-link--active' : '' }}"
+                       href="{{route('admin.products.index')}}">Управление товарами</a>
+                </li>
+                <li class="admin__navigation-item">
+                    <a class="admin__navigation-link {{ request()->routeIs('admin.users.index') ? 'admin__navigation-link--active' : '' }}"
+                       href="{{route('admin.users.index')}}">Управление пользователями</a>
                 </li>
             </ul>
         </div>

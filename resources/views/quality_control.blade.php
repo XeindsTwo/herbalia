@@ -52,6 +52,7 @@
     </div>
 </section>
 @include('fragments/contacts')
+@include('fragments/footer')
 @include('fragments/modals_header')
 @vite(['resources/js/app.js'])
 </body>

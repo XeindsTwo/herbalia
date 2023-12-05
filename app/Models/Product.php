@@ -19,6 +19,15 @@ class Product extends Model
         'category_id'
     ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function ($product) {
+            $product->images()->delete();
+        });
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

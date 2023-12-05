@@ -3,7 +3,7 @@
 <header class="header header--not-main">
     @include('fragments/header_top')
 </header>
-<section class="static indent indent--breadcrumbs">
+<section class="static indent indent--breadcrumbs indent--footer">
     <div class="container">
         <ul class="breadcrumbs">
             <li class="breadcrumbs__item">
@@ -157,5 +157,6 @@
     </div>
 </section>
 @include('fragments/modals_header')
+@include('fragments/footer')
 @vite(['resources/js/app.js'])
 </body>

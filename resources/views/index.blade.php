@@ -73,6 +73,7 @@
 @include('home/delivery')
 @include('home/guarantees')
 @include('fragments/contacts')
+@include('fragments/footer')
 @include('fragments/modals_header')
 @vite(['resources/js/app.js'])
 @vite(['resources/js/main.js'])
