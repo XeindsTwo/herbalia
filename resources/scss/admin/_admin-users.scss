@@ -20,6 +20,26 @@
     }
   }
 
+  &__search {
+    margin-bottom: 30px;
+    max-width: 460px;
+
+    input {
+      max-width: 100%;
+      border-color: $accent;
+
+      &::placeholder {
+        transition: color .4s;
+      }
+
+      &:hover {
+        &::placeholder {
+          color: $black;
+        }
+      }
+    }
+  }
+
   &__list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -37,10 +57,25 @@
   &__login {
     padding: 0 20px;
     font-size: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 
     span {
       color: $accent;
+    }
+  }
+
+  &__edit {
+    display: inline-block;
+    margin: 0 20px 30px;
+    font-size: 16px;
+    transition: color .4s, opacity .4s;
+
+    &:hover {
+      color: #8297ff;
+    }
+
+    &:focus {
+      opacity: .5;
     }
   }
 
@@ -89,5 +124,19 @@
       border: transparent;
       grid-column: span 2;
     }
+  }
+}
+
+.admin-edit {
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
+    grid-gap: 50px 30px;
+    margin-bottom: 20px;
+  }
+
+  &__item {
+    @include flex-column(5);
   }
 }

@@ -47,12 +47,12 @@
                     </label>
                     <ul class="custom-file__items" id="uploadedImages"></ul>
                 </div>
-                <div class="form-group">
+                <div class="admin-add__description">
                     <label class="label" for="description">Описание товара</label>
                     <textarea class="input input--textarea" name="description" id="description" required></textarea>
                 </div>
             </div>
-            <button type="submit" id="submitButton">Отправить</button>
+            <button class="modal__btn" type="submit" id="submitButton">Создать товар</button>
         </form>
     </div>
 </section>

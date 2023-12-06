@@ -16,6 +16,16 @@
                     Чтобы управлять товарами - выберите одну из категорий для дальнейшей работы
                 </div>
             </div>
+            @if($categories->isEmpty())
+                <div class="admin-products__empty">
+                    <img class="admin-products__decor" src="{{asset('static/images/icons/flowers.svg')}}" width="120"
+                         alt="декор">
+                    <span class="admin-products__title">В управлении пока пусто ¯\_(ツ)_/¯</span>
+                    <p class="admin-products__text">Категорий еще нет, но вы можете создать их</p>
+                    <a class="admin-products__btn admin__btn admin__btn--categories"
+                       href="{{route('admin.categories.index')}}">Добавить категорию</a>
+                </div>
+            @endif
             <ul class="admin-products__buttons">
                 @foreach($categories as $category)
                     <li class="admin-products__item">

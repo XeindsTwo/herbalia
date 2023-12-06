@@ -26,4 +26,8 @@
     display: flex;
     flex-direction: column;
   }
+
+  &__description {
+    margin-bottom: 40px;
+  }
 }

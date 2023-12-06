@@ -1,17 +1,26 @@
 import {openModal, closeModal, handleModalClose} from './components/modal-functions.js';
+import {handleSearchInput} from './user/search.js';
 
 const createUserBtn = document.getElementById('createUserBtn');
 const modalCreate = document.getElementById('modalAddUser');
+const modalCreateCloseBtn = document.getElementById('modalCloseAddUser');
 const createBtnUser = document.getElementById('createBtnUser');
 
 createUserBtn.addEventListener('click', () => {
     openModal(modalCreate);
 });
 
+modalCreateCloseBtn.addEventListener('click', () => {
+    closeModal(modalCreate);
+});
+
+handleModalClose(modalCreate);
+
+handleSearchInput();
+
 createBtnUser.addEventListener('click', async (e) => {
     e.preventDefault();
     const formData = new FormData(document.getElementById('userForm'));
-
     try {
         const response = await fetch(`/admin/users/`, {
             method: 'POST',
@@ -23,11 +32,11 @@ createBtnUser.addEventListener('click', async (e) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error(errorData.message); // Покажем сообщение об ошибке в консоли
+            console.error(errorData.message);
         } else {
             const successData = await response.json();
-            console.log(successData.message); // Покажем сообщение об успехе в консоли
-            closeModal(modalCreate); // Закрываем модальное окно после успешного создания пользователя
+            console.log(successData.message);
+            closeModal(modalCreate);
         }
     } catch (error) {
         console.error('Ошибка при отправке запроса:', error);

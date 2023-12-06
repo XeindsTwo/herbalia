@@ -8,10 +8,17 @@
         <div class="admin__wrapper">
             <h1 class="admin__title">Управление пользователями</h1>
             <button class="admin-users__btn" id="createUserBtn" type="button">Создать пользователя</button>
-            <ul class="admin-users__list">
+            <form class="admin-users__search" action="#" method="GET" id="searchForm">
+                <input class="input" type="text" id="query" name="query" placeholder="Поиск по логину, имени или почте">
+            </form>
+            <ul class="admin-users__list" id="userListContainer">
                 @foreach($users as $user)
                     <li class="admin-users__item" data-user-id="{{$user->id}}">
                         <p class="admin-users__login"><span>{{$user->login}}</span></p>
+                        <a class="admin-users__edit" href="{{route('admin.users.edit', ['user' => $user])}}"
+                           target="_blank">
+                            Редактировать
+                        </a>
                         <div class="admin-users__content">
                             <p>Имя: {{$user->name}}</p>
                             <p>Почта: {{$user->email}}</p>
@@ -19,8 +26,10 @@
                         </div>
                         <div class="admin-users__actions">
                             @if($user->id !== auth()->id())
-                                <button class="admin-users__action admin-users__action--reset">Сбросить пароль</button>
-                                <button class="admin-users__action admin-users__action--delete"
+                                <button class="admin-users__action admin-users__action--reset" type="button">Сбросить
+                                    пароль
+                                </button>
+                                <button class="admin-users__action admin-users__action--delete" type="button"
                                         data-user-id="{{$user->id}}">
                                     Удалить аккаунт
                                 </button>
