@@ -33,6 +33,7 @@
                 <form class="admin-products__search"
                       action="{{ route('admin.products.category.search', ['category_id' => $currentCategory->id]) }}"
                       method="GET"
+                      id="productSearchForm"
                       data-search-url="{{ route('admin.products.category.search', ['category_id' => $currentCategory->id]) }}">
                     <input type="text" name="query" placeholder="Введите данные из имени или описания товара">
                 </form>
@@ -47,7 +48,7 @@
                        href="{{route('admin.products.create')}}">Добавить товар</a>
                 </div>
             @else
-                <ul class="admin-products__list">
+                <ul class="admin-products__list" id="productsListContainer">
                     @foreach($products as $product)
                         <li class="admin-products__card" data-product-id="{{$product->id}}">
                             <div class="admin-products__head">
@@ -60,8 +61,8 @@
                                 </div>
                                 @foreach($product->images as $image)
                                     @if($loop->first)
-                                        <img class="admin-products__img" src="{{asset('storage/' . $image->path)}}"
-                                             height="360" alt="{{$product->name}}">
+                                        <img class="admin-products__img" src="{{ asset('storage/' . $image->path) }}"
+                                             height="360" alt="{{$product->name}}" data-image-path="{{$image->path}}">
                                     @endif
                                 @endforeach
                             </div>

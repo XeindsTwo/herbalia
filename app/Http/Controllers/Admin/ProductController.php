@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductComposition;
 use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -33,24 +34,22 @@ class ProductController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'description' => 'required',
+        $validatedData = $request->validate([
+            'name' => 'required|max:240',
+            'price' => 'required|numeric|min:1700|max:1000000',
             'photos.*' => 'required|image',
             'category_id' => 'required|exists:categories,id',
+            'composition.*.element_name' => 'required|max:240',
+            'composition.*.quantity' => 'required|numeric|min:1|max:1000',
         ]);
 
         $article = mt_rand(101000, 189999);
-
-        $product = new Product([
-            'name' => $request->input('name'),
-            'price' => $request->input('price'),
-            'description' => $request->input('description'),
+        $product = Product::create([
+            'name' => $validatedData['name'],
+            'price' => $validatedData['price'],
             'article' => $article,
-            'category_id' => $request->input('category_id'),
+            'category_id' => $validatedData['category_id'],
         ]);
-        $product->save();
 
         foreach ($request->file('photos') as $photo) {
             if ($photo->isValid()) {
@@ -62,6 +61,13 @@ class ProductController extends Controller
                 ]);
             } else {
                 return back()->with('error', 'Некорректный файл изображения');
+            }
+        }
+
+        if ($request->has('composition')) {
+            $compositionData = json_decode($request->input('composition'), true);
+            if ($compositionData) {
+                $product->composition()->createMany($compositionData);
             }
         }
 
@@ -84,16 +90,6 @@ class ProductController extends Controller
         return view('product_detail', compact('product', 'currentCategory'));
     }
 
-    public function edit(string $id)
-    {
-
-    }
-
-    public function update(Request $request, string $id)
-    {
-
-    }
-
     public function destroy(string $id): JsonResponse
     {
         $product = Product::findOrFail($id);
@@ -108,25 +104,61 @@ class ProductController extends Controller
         }
     }
 
-    public function search(Request $request, $category_id): JsonResponse
+    public function getAllProductsCategory($category_id): JsonResponse
+    {
+        $products = Product::with('images')
+            ->where('category_id', $category_id)
+            ->get();
+
+        $formattedProducts = $products->map(function ($product) {
+            $imagePath = null;
+            if ($product->images->isNotEmpty()) {
+                $imagePath = $product->images->first()->path;
+            }
+
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'description' => $product->description,
+                'article' => $product->article,
+                'category_id' => $product->category_id,
+                'image_path' => $imagePath,
+            ];
+        });
+
+        return response()->json(['products' => $formattedProducts]);
+    }
+
+    public function searchProductsInCategory(Request $request, $category_id): JsonResponse
     {
         $query = $request->input('query');
 
-        $productsQuery = Product::where('category_id', $category_id)
+        $productsQuery = Product::with('images')
+            ->where('category_id', $category_id)
             ->where(function ($queryBuilder) use ($query) {
-                $queryBuilder->where('name', 'LIKE', "%$query%")
-                    ->orWhere('description', 'LIKE', "%$query%");
+                $queryBuilder->where('name', 'like', "%$query%")
+                    ->orWhere('description', 'like', "%$query%");
             });
 
         $products = $query ? $productsQuery->get() : collect([]);
+        $formattedProducts = $products->map(function ($product) {
+            $imagePath = null;
+            if ($product->images->isNotEmpty()) {
+                $imagePath = $product->images->first()->path;
+            }
 
-        $categories = Category::orderBy('order_index')->get();
-        $currentCategory = Category::find($category_id);
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'description' => $product->description,
+                'article' => $product->article,
+                'category_id' => $product->category_id,
+                'image_path' => $imagePath,
+            ];
+        });
 
-        return response()->json([
-            'products' => $products,
-            'categories' => $categories,
-            'currentCategory' => $currentCategory,
-        ]);
+        return response()->json(['products' => $formattedProducts]);
     }
 }

@@ -81,7 +81,7 @@
       line-height: 1;
       font-weight: 700;
       position: relative;
-      display: inline-block;
+      align-self: flex-start;
       color: #3d1522;
       padding-bottom: 3px;
       transition: opacity .3s;
@@ -114,6 +114,7 @@
   }
 
   &__phone {
+    @include flex-column(5);
     span {
       display: block;
       font-size: 12px;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,6 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
-        'description',
         'article',
         'category_id'
     ];
@@ -36,5 +36,10 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function composition(): HasMany
+    {
+        return $this->hasMany(ProductComposition::class);
     }
 }

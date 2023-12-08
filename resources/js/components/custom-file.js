@@ -1,8 +1,8 @@
 export function createImageUploader(maxImages) {
     let imageCount = 0;
-    let selectedFiles = [];
     const uploadedImages = document.getElementById("uploadedImages");
     let filesUploaded = false;
+    let allSelectedFiles = [];
 
     function isImageAllowed(file) {
         const allowedTypes = ["image/png", "image/webp", "image/jpeg", "image/jpg"];
@@ -26,69 +26,103 @@ export function createImageUploader(maxImages) {
     }
 
     function addImagePlaceholder(file) {
+        console.log("Текущий файл:");
+        console.log(file);
+
         if (imageCount < maxImages) {
             const fileExtension = file.name.split('.').pop();
 
             if (isImageAllowed(file)) {
                 imageCount++;
                 const fileURL = URL.createObjectURL(file);
-                selectedFiles.push({ file, url: fileURL });
+                allSelectedFiles.push({file, url: fileURL});
 
-                const imageContainer = document.createElement("div");
-                imageContainer.className = "custom-file__item";
-                uploadedImages.style.display = "grid";
+                updateImagesDisplay();
 
-                const imageInfo = document.createElement("div");
-                imageInfo.className = "custom-file__info";
-
-                const removeButton = document.createElement("button");
-                removeButton.className = "custom-file__remove";
-                removeButton.type = "button";
-                removeButton.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path class="path" d="M13 1L1 13" stroke="#a5a5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="path" d="M1 1L13 13" stroke="#a5a5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            `;
-                removeButton.addEventListener("click", function () {
-                    uploadedImages.removeChild(imageContainer);
-                    imageCount--;
-
-                    const fileToRemoveIndex = selectedFiles.findIndex(selectedFile => selectedFile.file.name === file.name);
-                    if (fileToRemoveIndex !== -1) {
-                        selectedFiles.splice(fileToRemoveIndex, 1);
-                    }
-
-                    toggleUploadedImagesDisplay();
-                    updateImageNumbers();
-                    filesUploaded = selectedFiles.length > 0;
-                });
-
-                imageInfo.appendChild(removeButton);
-                imageContainer.appendChild(imageInfo);
-
-                const imagePreview = document.createElement("img");
-                imagePreview.className = "custom-file__preview";
-                imagePreview.src = fileURL;
-                imagePreview.alt = file.name;
-                imagePreview.height = 400;
-                imageContainer.appendChild(imagePreview);
-
-                const imageNumber = document.createElement("span");
-                imageNumber.textContent = `Картинка ${imageCount}.${fileExtension}`;
-                imageInfo.appendChild(imageNumber);
-
-                uploadedImages.appendChild(imageContainer);
-                toggleUploadedImagesDisplay();
                 displayError("photosLimitMinError", false);
                 filesUploaded = true;
+
+                console.log("Реальный массив данных после добавления файла:");
+                console.log(allSelectedFiles);
             } else {
-                displayError("photosLimitMaxError");
+                displayError("photosError");
+                console.log("Реальный массив данных (файлы не изображения):");
+                console.log(allSelectedFiles);
             }
         } else {
             displayError("photosLimitMaxError");
         }
-        console.log(`Файл ${file.name} добавлен`);
+    }
+
+    function updateImagesDisplay() {
+        uploadedImages.innerHTML = "";
+
+        allSelectedFiles.forEach((selectedFile, index) => {
+            const file = selectedFile.file;
+            const fileExtension = file.name.split('.').pop();
+            const fileURL = selectedFile.url;
+
+            const imageContainer = document.createElement("div");
+            imageContainer.className = "custom-file__item";
+            uploadedImages.style.display = "grid";
+
+            const imageInfo = document.createElement("div");
+            imageInfo.className = "custom-file__info";
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "custom-file__remove";
+            removeButton.type = "button";
+            removeButton.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="path" d="M13 1L1 13" stroke="#a5a5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path class="path" d="M1 1L13 13" stroke="#a5a5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        `;
+            removeButton.addEventListener("click", function () {
+                uploadedImages.removeChild(imageContainer);
+                imageCount--;
+
+                const indexToRemove = allSelectedFiles.indexOf(selectedFile);
+                if (indexToRemove !== -1) {
+                    allSelectedFiles.splice(indexToRemove, 1);
+                }
+
+                updateImagesDisplay();
+
+                displayError("photosLimitMinError", false);
+                filesUploaded = allSelectedFiles.length > 0;
+                console.log("Реальный массив данных после удаления файла:");
+                console.log(allSelectedFiles);
+            });
+
+            imageInfo.appendChild(removeButton);
+            imageContainer.appendChild(imageInfo);
+
+            const imagePreview = document.createElement("img");
+            imagePreview.className = "custom-file__preview";
+            imagePreview.src = fileURL;
+            imagePreview.alt = file.name;
+            imagePreview.height = 400;
+            imageContainer.appendChild(imagePreview);
+
+            const imageNumber = document.createElement("span");
+            imageNumber.textContent = `Картинка ${index + 1}.${fileExtension}`;
+            imageInfo.appendChild(imageNumber);
+
+            uploadedImages.appendChild(imageContainer);
+        });
+
+        toggleUploadedImagesDisplay();
+
+        const formData = new FormData();
+        allSelectedFiles.forEach((selectedFile, index) => {
+            formData.append(`photos[${index}]`, selectedFile.file);
+        });
+
+        console.log('Файлы для отправки на сервер:');
+        for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+        }
     }
 
     function updateImageNumbers() {
@@ -100,7 +134,7 @@ export function createImageUploader(maxImages) {
             const fileExtension = currentText.split('.').pop();
             imageNumber.textContent = `Картинка ${index + 1}.${fileExtension}`;
         });
-        console.log(`Количество изображений: ${selectedFiles.length}`);
+        console.log(`Количество изображений: ${allSelectedFiles.length}`);
     }
 
     document.getElementById("fileInput").addEventListener("change", function () {
@@ -117,11 +151,11 @@ export function createImageUploader(maxImages) {
         }
 
         console.log("Следующие файлы будут отправлены на сервер:");
-        selectedFiles.forEach((file, index) => {
+        allSelectedFiles.forEach((file, index) => {
             console.log(`Файл ${index + 1}: ${file.file.name}`);
         });
 
-        console.log(`Всего файлов: ${selectedFiles.length}`);
+        console.log(`Всего файлов: ${allSelectedFiles.length}`);
     });
 
     document.querySelector(".admin-add__form").addEventListener("submit", function (event) {
