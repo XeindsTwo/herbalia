@@ -8,18 +8,17 @@ class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()->role === 'ADMIN';
     }
 
     public function rules(): array
     {
-        $userId = $this->route('user')->id;
-
         return [
-            'login' => 'required|string|min:5|max:60|unique:users,login,' . $userId,
+            'login' => 'required|string|min:5|max:60|unique:users,login,' . $this->user->id,
             'name' => 'required|string|min:2|max:50',
-            'email' => 'required|email|unique:users,email,' . $userId,
-            'password' => 'required|string|min:8|max:60',
+            'email' => 'required|email|unique:users,email,' . $this->user->id,
+            'password' => 'nullable|string|min:8|max:60',
+            'role' => 'required|in:ADMIN,USER',
         ];
     }
 }

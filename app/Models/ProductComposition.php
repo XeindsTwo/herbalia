@@ -11,8 +11,7 @@ class ProductComposition extends Model
     use HasFactory;
 
     protected $fillable = [
-        'element_name',
-        'quantity'
+        'product_id',
     ];
 
     public function product(): BelongsTo

@@ -1,3 +1,5 @@
+import {openModal} from '../components/modal-functions.js';
+
 export function handleSearchInput() {
     let searchTimer;
 
@@ -57,6 +59,9 @@ export function displayUsers(users) {
     const newContent = users.map(user => `
         <li class="admin-users__item" data-user-id="${user.id}">
             <p class="admin-users__login"><span>${user.login}</span></p>
+            <a class="admin-users__edit" href="/admin/users/${user.id}/edit">
+                Редактировать
+            </a>
             <div class="admin-users__content">
                 <p>Имя: ${user.name}</p>
                 <p>Почта: ${user.email}</p>
@@ -69,7 +74,7 @@ export function displayUsers(users) {
                         Удалить аккаунт
                     </button>
                 ` : `
-                    <p class="admin-users__action admin-users__action--long">¯\\_(ツ)_/¯ Не делай глупых решений</p>
+                    <p class="admin-users__action admin-users__action--long">¯\\_(ツ)_/¯ не делай глупых решений</p>
                 `}
             </div>
         </li>`

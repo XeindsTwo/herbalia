@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('product_compositions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('element_name');
+            $table->string('name');
             $table->integer('quantity');
             $table->timestamps();
         });

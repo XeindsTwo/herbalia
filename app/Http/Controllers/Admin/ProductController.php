@@ -38,9 +38,7 @@ class ProductController extends Controller
             'name' => 'required|max:240',
             'price' => 'required|numeric|min:1700|max:1000000',
             'photos.*' => 'required|image',
-            'category_id' => 'required|exists:categories,id',
-            'composition.*.element_name' => 'required|max:240',
-            'composition.*.quantity' => 'required|numeric|min:1|max:1000',
+            'category_id' => 'required|exists:categories,id'
         ]);
 
         $article = mt_rand(101000, 189999);
@@ -67,7 +65,16 @@ class ProductController extends Controller
         if ($request->has('composition')) {
             $compositionData = json_decode($request->input('composition'), true);
             if ($compositionData) {
-                $product->composition()->createMany($compositionData);
+                $dataToInsert = [];
+                foreach ($compositionData as $data) {
+                    $dataToInsert[] = [
+                        'name' => $data['name'],
+                        'quantity' => $data['quantity'],
+                        'product_id' => $product->id,
+                    ];
+                }
+
+                ProductComposition::insert($dataToInsert);
             }
         }
 
@@ -87,7 +94,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $currentCategory = $product->category;
-        return view('product_detail', compact('product', 'currentCategory'));
+        $currentComposition = $product->composition;
+        return view('product_detail', compact('product', 'currentCategory', 'currentComposition'));
     }
 
     public function destroy(string $id): JsonResponse

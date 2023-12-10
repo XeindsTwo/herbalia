@@ -55,9 +55,10 @@ class UserController extends Controller
         ]);
 
         $validatedData['password'] = Hash::make($validatedData['password']);
-        User::create($validatedData);
+        $validatedData['role'] = $request->input('role', 'USER');
+        $user = User::create($validatedData);
 
-        return response()->json(['message' => 'Пользователь успешно добавлен']);
+        return response()->json(['message' => 'Пользователь успешно добавлен', 'user' => $user]);
     }
 
     public function edit(User $user): View|Factory|Application

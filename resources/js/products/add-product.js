@@ -71,6 +71,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const addButton = document.querySelector('.admin-add__plus');
     const compositionContainer = document.getElementById('compositionContainer');
     const hiddenComposition = document.getElementById('hiddenComposition');
+    const submitButton = document.getElementById('submitButton');
+
+    submitButton.addEventListener('click', function () {
+        updateIndexes();
+    });
 
     addButton.addEventListener('click', function () {
         const rowCount = compositionContainer.querySelectorAll('.admin-add__row').length;
