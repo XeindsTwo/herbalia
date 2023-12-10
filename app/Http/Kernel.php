@@ -3,13 +3,16 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\CheckDatabaseConnection;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
     protected $routeMiddleware = [
         'admin' => AdminMiddleware::class,
-        'checkdb' => \App\Http\Middleware\CheckDatabaseConnection::class,
+        'checkdb' => CheckDatabaseConnection::class,
+        'auth' => Authenticate::class,
     ];
 
     protected $middleware = [
@@ -40,7 +43,7 @@ class Kernel extends HttpKernel
     ];
 
     protected $middlewareAliases = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

@@ -330,30 +330,35 @@
     }
   }
 
-  &__control {
-    position: relative;
-    align-self: flex-start;
-    padding-bottom: 2px;
-    transition: opacity .3s;
+  &__feedback {
+    @include flex-column(9);
 
-    &:hover {
-      &::before {
-        width: 100%;
+    &-link {
+      position: relative;
+      align-self: flex-start;
+      padding-bottom: 2px;
+      line-height: 1.2;
+      transition: opacity .3s;
+
+      &:hover {
+        &::before {
+          width: 100%;
+        }
       }
-    }
 
-    &:focus {
-      opacity: .5;
-    }
+      &:focus {
+        opacity: .5;
+      }
 
-    &::before {
-      @include pseudo;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 1px;
-      transition: width .4s;
-      background-color: $white;
+      &::before {
+        @include pseudo;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        transition: width .4s;
+        background-color: $white;
+      }
     }
   }
 }

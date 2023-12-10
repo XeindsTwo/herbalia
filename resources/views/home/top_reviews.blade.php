@@ -7,30 +7,14 @@
                 <h2 class="top-reviews__title block-title">Что говорят о нас клиенты?</h2>
                 <div class="top-reviews__swiper swiper">
                     <div class="swiper-wrapper">
-                        <div class="top-reviews__slide swiper-slide">
-                            <p class="top-reviews__text">
-                                “Доброе утро)
-                                Заказали букет "Золотце" ко дню учителя) Из Питера с доставкой в Москве)
-                                Огромная благодарность менеджеру, флористу, курьеру и всем-всем-всем!!!
-                                Прекрасный букет! Своевременная доставка минута в минуту! Получатель и заказчик
-                                счастливы) Спасибо, за вашу работу!!!)))”
-                            </p>
-                            <span class="top-reviews__name">Ольга П.</span>
-                        </div>
-                        <div class="top-reviews__slide swiper-slide">
-                            <p class="top-reviews__text">
-                                “Букет очень красивый, понравился подход, выбирали цветы тщательно, проработали каждую
-                                мелочь. Спасибо за работу!”
-                            </p>
-                            <span class="top-reviews__name">Ольга П.</span>
-                        </div>
-                        <div class="top-reviews__slide swiper-slide">
-                            <p class="top-reviews__text">
-                                “Доброе утро)
-                                Заказали букет "Золотце" ко дню учителя) Из Белоры с доставкой в Краснодар)
-                            </p>
-                            <span class="top-reviews__name">Ольга П.</span>
-                        </div>
+                        @foreach($approvedReviews as $review)
+                            <div class="top-reviews__slide swiper-slide">
+                                <p class="top-reviews__text">
+                                    “{{$review->comment}}”
+                                </p>
+                                <span class="top-reviews__name">{{$review->name}}</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="top-reviews__navigation">

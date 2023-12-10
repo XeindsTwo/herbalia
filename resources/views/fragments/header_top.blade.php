@@ -16,7 +16,10 @@
                 <a class="header__info-phone" href="tel:+795062576050">8 (950) 625-76-50</a>
                 <a class="header__info-link" href="{{ route('contacts') }}">Еще контакты</a>
             </div>
-            <a class="header__control" href="{{ route('control') }}">Контроль качества</a>
+            <div class="header__feedback">
+                <a class="header__feedback-link" href="{{ route('control') }}">Контроль качества</a>
+                <a class="header__feedback-link" href="{{route('reviews')}}">Отзывы</a>
+            </div>
             <div class="header__actions">
                 <div class="header__actions-top">
                     <button class="header__btn header__btn--help" id="helpBtn" type="button">Помощь</button>

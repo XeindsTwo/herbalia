@@ -17,6 +17,10 @@
     max-width: 850px;
   }
 
+  &--reviews {
+    max-width: 800px;
+  }
+
   &--active {
     transform: translate(-50%, -50%);
     opacity: 1;
@@ -72,9 +76,14 @@
     color: #3d1522;
   }
 
+  &__content {
+    @include flex-column(26);
+  }
+
   &__list {
     @include flex-column(25);
     margin-bottom: 30px;
+
     &--grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -110,6 +119,11 @@
       &:hover {
         border-color: #f94747;
       }
+    }
+
+    &--complete {
+      text-align: center;
+      align-self: flex-start;
     }
   }
 
