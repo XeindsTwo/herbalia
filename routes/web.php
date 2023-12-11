@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CaptchaController;
 use Illuminate\Support\Facades\Route;
 
 include 'errors.php';
@@ -47,3 +48,6 @@ Route::get('/agreement', static function () {
 Route::get('/flower-care', static function () {
     return view('flower_care');
 })->name('flower-care');
+
+Route::get('/generate-captcha', [CaptchaController::class, 'generateCaptcha'])->name('generate-captcha');
+Route::post('/validate-captcha', [CaptchaController::class, 'validateCaptcha']);

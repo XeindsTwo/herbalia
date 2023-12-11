@@ -64,6 +64,31 @@
     margin-bottom: 30px;
   }
 
+  &__head {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  &__captcha {
+    @include objectCoverBg;
+  }
+
+  &__refresh {
+    &:hover {
+      svg path {
+        stroke: $accent;
+      }
+    }
+
+    &:active {
+      svg path {
+        stroke: #72aefd;
+      }
+    }
+  }
+
   &__link {
     display: block;
     margin-bottom: 15px;

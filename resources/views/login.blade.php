@@ -16,7 +16,7 @@
             </a>
             <h2 class="auth__title">Вход в профиль</h2>
             <p class="auth__text">Вы увидите историю заказов, будете иметь возможность оставлять отзывы и т.д.</p>
-            <form method="POST" action="{{ route('login') }}">
+            <form id="formAuth" method="POST" action="{{ route('login') }}">
                 @csrf
                 <span class="error @if($errors->has('login')) error--active @endif" id="authError">
                     {{ $errors->first('login') ?? 'Неверно введен логин или пароль' }}
@@ -32,6 +32,25 @@
                         <input class="input" id="password" type="password" placeholder="Введите пароль" name="password"
                                value="{{ old('password') }}" required>
                     </li>
+                    <li class="auth__item">
+                        <label class="label" for="captcha">Введите капчу</label>
+                        <div class="auth__head">
+                            <img class="auth__captcha" id="captchaImage" src="{{ route('generate-captcha') }}"
+                                 alt="captcha">
+                            <button class="auth__refresh" id="refreshCaptcha" type="button">
+                                <svg width="25" height="26" viewBox="0 0 25 26" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.6416 10.6084C3.25274 8.32764 4.63581 6.3293 6.55515 4.95392C8.4745 3.57854 10.8114 2.91121 13.1676 3.06564C15.5238 3.22008 17.7535 4.18672 19.4769 5.80086C21.2003 7.41499 22.3107 9.57676 22.6189 11.9178C22.9271 14.2589 22.4141 16.6344 21.1672 18.6396C19.9203 20.6448 18.0167 22.1556 15.7807 22.9146C13.5448 23.6736 11.1148 23.6338 8.90491 22.802C6.69499 21.9703 4.84184 20.398 3.66121 18.3531"
+                                          stroke="#242424" stroke-width="1.3" stroke-linejoin="round"/>
+                                    <path d="M0.973025 5.76904L2.29381 10.6983L7.22302 9.37748" stroke="#242424"
+                                          stroke-width="1.3" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="error" id="captchaError">Капча была введена неверно, попробуйте снова</span>
+                        <input class="input" id="captcha" name="captcha" type="text" placeholder="Введите капчу"
+                               required>
+                    </li>
                 </ul>
                 <span class="auth__link">
                     Нет аккаунта? <a href="{{route('register')}}">Тогда зарегистрируйтесь</a>
@@ -45,4 +64,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@vite(['resources/js/captcha.js'])
 </body>

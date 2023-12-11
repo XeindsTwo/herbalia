@@ -24,7 +24,10 @@
                 <div class="header__actions-top">
                     <button class="header__btn header__btn--help" id="helpBtn" type="button">Помощь</button>
                     @if(Auth::check())
-                        <a class="header__auth" href="{{route('contacts')}}">Личный кабинет</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="header__auth">Выход</button>
+                        </form>
                     @else
                         <a class="header__auth" href="{{route('login')}}" id="auth_btn" type="button">Войти</a>
                     @endif
