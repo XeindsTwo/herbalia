@@ -3,58 +3,74 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
-use App\Models\User;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
 {
-    public function index(): View|Application|Factory
-    {
-        $reviews = Review::where('status', true)->get();
+  public function homePage(): JsonResponse
+  {
+    $reviews = Review::where('status', true)
+      ->where('display_on_homepage', true)
+      ->get();
 
-        $totalRating = 0;
-        $reviewCount = count($reviews);
+    return response()->json([
+      'reviews' => $reviews
+    ]);
+  }
 
-        foreach ($reviews as $review) {
-            $totalRating += $review->rating;
-        }
+  public function reviewsPage(): JsonResponse
+  {
+    $reviews = Review::where('status', true)->get();
 
-        $averageRating = $reviewCount > 0 ? round($totalRating / $reviewCount, 1) : 0;
+    return response()->json([
+      'reviews' => $reviews,
+    ]);
+  }
 
-        return view('reviews', compact('reviews', 'averageRating'));
-    }
+  public function getAverageRating(): JsonResponse
+  {
+    $averageRating = Review::where('status', true)->avg('rating') ?? 0;
+    $formattedAverageRating = number_format($averageRating, 1);
+    return response()->json(['averageRating' => $formattedAverageRating]);
+  }
 
-    public function create(): Application|Factory|View|RedirectResponse
-    {
-        if (!Auth::check()) {
-            return redirect()->route('auth');
-        }
-        return view('reviews-form');
-    }
+  public function store(Request $request)
+  {
+    $key = 'reviews_' . $request->ip();
+    $maxRequests = 3;
+    $decayInSeconds = 1800;
 
-    public function store(Request $request): JsonResponse
-    {
+    try {
+      if (!RateLimiter::tooManyAttempts($key, $maxRequests)) {
+        RateLimiter::hit($key, $decayInSeconds);
+
         if (Auth::check()) {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:50',
-                'email' => 'required|email|max:80',
-                'rating' => 'required|integer|min:1|max:5',
-                'comment' => 'required|string|max:2000',
-            ]);
+          $validatedData = $request->validate([
+            'name' => 'required|string|min:2|max:50|regex:/^[A-Za-zА-Яа-яЁё\s\-]+$/u',
+            'email' => 'required|email|max:80',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:2000',
+          ]);
 
-            $review = new Review($validatedData);
-            Auth::user()->reviews()->save($review);
+          $review = new Review($validatedData);
+          Auth::user()->reviews()->save($review);
 
-            return response()->json(['message' => 'Отзыв был успешно добавлен'], 200);
+          return response()->json(['message' => 'Отзыв был успешно добавлен']);
         } else {
-            return response()->json(['message' => 'Пользователь не авторизован'], 403);
+          return response()->json(['message' => 'Пользователь не авторизован'], 403);
         }
+      } else {
+        return response()->json(['error' => 'Превышено максимальное количество ваших отзывов. Пожалуйста, попробуйте чуть позже'], 429);
+      }
+    } catch (ValidationException $e) {
+      return response()->json(['error' => $e->getMessage()], 422);
+    } catch (Exception) {
+      return response()->json(['error' => 'Произошла ошибка. Пожалуйста, попробуйте еще раз'], 500);
     }
+  }
 }

@@ -5,50 +5,35 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
-    public function register(Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
-    {
-        DB::beginTransaction();
-        try {
-            $validatedData = $request->validate([
-                'login' => 'required|string|min:5|max:60|unique:users|regex:/^[a-zA-Z0-9_]+$/',
-                'name' => 'required|string|min:2|max:50|regex:/^[A-Za-zА-Яа-яЁё\-]+$/u',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8|max:60',
-            ]);
+  public function register(Request $request)
+  {
+    try {
+      $validatedData = $request->validate([
+        'login' => 'required|string|min:5|max:60|unique:users|regex:/^[a-zA-Z0-9_]+$/',
+        'name' => 'required|string|min:2|max:50|regex:/^[A-Za-zА-Яа-яЁё\s\-]+$/u',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8|max:60|regex:/^[^\sа-яА-Я]*$/',
+      ]);
 
-            User::create([
-                'login' => $validatedData['login'],
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
-                'role' => 'USER',
-            ]);
+      User::create([
+        'login' => $validatedData['login'],
+        'name' => $validatedData['name'],
+        'email' => $validatedData['email'],
+        'password' => Hash::make($validatedData['password']),
+        'role' => 'USER',
+      ]);
 
-            DB::commit();
-            return redirect('login')->with('success', 'Регистрация прошла успешно!');
-        } catch (Exception) {
-            DB::rollBack();
-            return redirect('/503_error');
-        }
+      return response()->json(['message' => 'Успешная регистрация!'], 201);
+    } catch (ValidationException $e) {
+      return response()->json(['message' => $e->getMessage()], 422);
+    } catch (Exception) {
+      return response()->json(['message' => 'Ошибка при регистрации'], 500);
     }
-
-    public function showRegisterForm(): Factory|Application|View|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
-    {
-        if (Auth::check()) {
-            return redirect('/');
-        }
-        return view('register');
-    }
+  }
 }

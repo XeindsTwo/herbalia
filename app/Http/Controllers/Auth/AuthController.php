@@ -3,47 +3,34 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Exception;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
-    {
-        $credentials = $request->only('login', 'password');
-        try {
-            if (Auth::attempt($credentials)) {
-                return redirect('/');
-            } else {
-                return redirect()->back()->withErrors([
-                    'login' => 'Неверно введен логин или пароль',
-                ]);
-            }
-        } catch (Exception) {
-            return redirect('/503_error');
-        }
-    }
+  public function login(Request $request)
+  {
+    $credentials = $request->only('login', 'password');
+    if (Auth::attempt($credentials)) {
+      $user = Auth::user();
+      $token = $user->createToken('Herbalia', ['role' => $user->role])->plainTextToken;
 
-    public function showLoginForm(): Factory|Application|View|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
-    {
-        if (Auth::check()) {
-            return redirect('/');
-        }
-
-        return view('login');
+      return response()->json([
+        'message' => 'Вы успешно авторизовались!',
+        'token' => $token,
+      ]);
+    } else {
+      return response()->json(['message' => 'Неверно введён логин или пароль'], 401);
     }
+  }
 
-    public function logout(Request $request): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
+  public function getUserRole()
+  {
+    if (Auth::check()) {
+      $user = Auth::user();
+      return response()->json(['role' => $user->role]);
+    } else {
+      return response()->json(['error' => 'Unauthorized'], 401);
     }
+  }
 }

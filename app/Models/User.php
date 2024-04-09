@@ -5,21 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+  use HasFactory, HasApiTokens;
 
-    protected $fillable = [
-        'login',
-        'name',
-        'email',
-        'password',
-        'role',
-    ];
+  protected $fillable = [
+    'login',
+    'name',
+    'email',
+    'password',
+    'role',
+  ];
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
+  public function reviews(): HasMany
+  {
+    return $this->hasMany(Review::class);
+  }
 }
