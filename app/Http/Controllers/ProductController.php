@@ -11,7 +11,7 @@ class ProductController extends Controller
   public function show(string $id): JsonResponse
   {
     try {
-      $product = Product::with('composition', 'images')->findOrFail($id);
+      $product = Product::with('composition', 'images', 'category')->findOrFail($id);
       foreach ($product->images as $image) {
         $image->url = asset('storage/' . $image->path);
       }

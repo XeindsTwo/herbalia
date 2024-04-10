@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\Review;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 
 class HomeController extends Controller
 {
-  public function index(): string
+  public function index(): JsonResponse
   {
-    return 'privet';
+    $categories = Category::all();
+    return response()->json($categories);
   }
 }
