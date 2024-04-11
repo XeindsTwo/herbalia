@@ -3,6 +3,6 @@
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('api')->middleware('checkdb')->group(function () {
-  Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::prefix('api/products')->middleware('checkdb')->group(function () {
+  Route::get('/{id}', [ProductController::class, 'show']);
 });
