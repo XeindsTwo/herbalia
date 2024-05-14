@@ -22,17 +22,37 @@ class ProductController extends Controller
   public function index(): JsonResponse
   {
     try {
-      $products = Product::with('images')->get();
-      foreach ($products as $product) {
+      $categories = Category::all();
+      return response()->json(['categories' => $categories]);
+    } catch (Exception) {
+      return response()->json(['error' => 'Произошла ошибка при получении категорий товаров'], 500);
+    }
+  }
+
+  public function productsByCategory($category_id): JsonResponse
+  {
+    try {
+      $category = Category::find($category_id);
+
+      if (!$category) {
+        return response()->json(['error' => 'Категория не найдена'], 404);
+      }
+
+      $products = Product::where('category_id', $category_id)->with('images')->get();
+      $products->transform(function ($product) {
         $product->images->transform(function ($image) {
           $image->url = asset('storage/' . $image->path);
           return $image;
         });
-      }
+        return $product;
+      });
 
-      return response()->json(['products' => $products]);
+      return response()->json([
+        'category' => $category->name,
+        'products' => $products
+      ]);
     } catch (Exception) {
-      return response()->json(['error' => 'Произошла ошибка при получении товаров'], 500);
+      return response()->json(['error' => 'Произошла ошибка при получении товаров по категории'], 500);
     }
   }
 
@@ -108,15 +128,6 @@ class ProductController extends Controller
     }
   }
 
-  public function showByCategory($category_id): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
-  {
-    Session::put('previous_url', url()->current());
-    $products = Product::where('category_id', $category_id)->get();
-    $categories = Category::orderBy('order_index')->get();
-    $currentCategory = Category::find($category_id);
-    return view('admin.category_page', compact('products', 'categories', 'currentCategory'));
-  }
-
   public function show(string $id): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
   {
     $product = Product::findOrFail($id);
@@ -139,61 +150,97 @@ class ProductController extends Controller
     }
   }
 
-  public function getAllProductsCategory($category_id): JsonResponse
+  public function edit(string $id): JsonResponse
   {
-    $products = Product::with('images')
-      ->where('category_id', $category_id)
-      ->get();
+    try {
+      $product = Product::findOrFail($id);
+      $categories = Category::all();
+      $images = $product->images->map(function ($image) {
+        $image->url = asset('storage/' . $image->path);
+        return $image;
+      });
+      $composition = $product->composition;
 
-    $formattedProducts = $products->map(function ($product) {
-      $imagePath = null;
-      if ($product->images->isNotEmpty()) {
-        $imagePath = $product->images->first()->path;
-      }
-
-      return [
-        'id' => $product->id,
-        'name' => $product->name,
-        'price' => $product->price,
-        'description' => $product->description,
-        'article' => $product->article,
-        'category_id' => $product->category_id,
-        'image_path' => $imagePath,
-      ];
-    });
-
-    return response()->json(['products' => $formattedProducts]);
+      return response()->json([
+        'product' => $product,
+        'categories' => $categories,
+        'images' => $images,
+        'composition' => $composition,
+      ]);
+    } catch (Exception $e) {
+      return response()->json(['error' => $e->getMessage()], 500);
+    }
   }
 
-  public function searchProductsInCategory(Request $request, $category_id): JsonResponse
+  public function update(Request $request, string $id): JsonResponse
   {
-    $query = $request->input('query');
+    $validator = Validator::make($request->all(), [
+      'name' => 'required|max:240',
+      'price' => 'required|numeric|min:1200|max:1000000',
+      'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+      'category_id' => 'required|exists:categories,id',
+      'composition' => 'array|min:1',
+      'composition.*.name' => 'required|max:240',
+      'composition.*.quantity' => 'required|numeric|min:1',
+    ]);
 
-    $productsQuery = Product::with('images')
-      ->where('category_id', $category_id)
-      ->where(function ($queryBuilder) use ($query) {
-        $queryBuilder->where('name', 'like', "%$query%")
-          ->orWhere('description', 'like', "%$query%");
-      });
+    if ($validator->fails()) {
+      return response()->json(['error' => $validator->errors()->first()], 400);
+    }
 
-    $products = $query ? $productsQuery->get() : collect([]);
-    $formattedProducts = $products->map(function ($product) {
-      $imagePath = null;
-      if ($product->images->isNotEmpty()) {
-        $imagePath = $product->images->first()->path;
+    try {
+      DB::beginTransaction();
+      $product = Product::findOrFail($id);
+      $product->update([
+        'name' => $request->input('name'),
+        'price' => $request->input('price'),
+        'category_id' => $request->input('category_id'),
+      ]);
+
+      $photos = $request->file('photos');
+      if ($photos) {
+        foreach ($photos as $photo) {
+          $this->saveImage($photo, $product);
+        }
       }
 
-      return [
-        'id' => $product->id,
-        'name' => $product->name,
-        'price' => $product->price,
-        'description' => $product->description,
-        'article' => $product->article,
-        'category_id' => $product->category_id,
-        'image_path' => $imagePath,
-      ];
-    });
+      $composition = $request->input('composition');
+      if ($composition) {
+        $this->updateComposition($composition, $product);
+      }
 
-    return response()->json(['products' => $formattedProducts]);
+      DB::commit();
+      return response()->json(['message' => 'Продукт успешно обновлен']);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json(['error' => $e->getMessage()], 400);
+    }
+  }
+
+  public function updateComposition($compositionData, $product)
+  {
+    try {
+      $existingIds = [];
+      foreach ($compositionData as $data) {
+        if (isset($data['id'])) {
+          ProductComposition::where('id', $data['id'])->update([
+            'name' => $data['name'],
+            'quantity' => $data['quantity'],
+          ]);
+          $existingIds[] = $data['id'];
+        } else {
+          $newComposition = ProductComposition::create([
+            'name' => $data['name'],
+            'quantity' => $data['quantity'],
+            'product_id' => $product->id,
+          ]);
+          $existingIds[] = $newComposition->id;
+        }
+      }
+
+      $product->composition()->whereNotIn('id', $existingIds)->delete();
+    } catch (Exception $e) {
+      throw new Exception("Ошибка обновления состава товара: " . $e->getMessage());
+    }
   }
 }

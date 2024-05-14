@@ -7,7 +7,7 @@ Route::middleware(['admin', 'auth:sanctum', 'checkdb'])->prefix('api/admin/produ
   Route::get('/', [ProductController::class, 'index']);
   Route::post('/create', [ProductController::class, 'store']);
   Route::delete('/{id}', [ProductController::class, 'destroy']);
-  Route::get('/category/{category_id}', [ProductController::class, 'showByCategory'])->name('admin.products.category');
-  Route::get('/category/{category_id}/all', [ProductController::class, 'getAllProductsCategory']);
-  Route::get('/category/{category_id}/search', [ProductController::class, 'searchProductsInCategory'])->name('admin.products.category.search');
+  Route::get('/category/{category_id}', [ProductController::class, 'productsByCategory']);
+  Route::get('/{id}/edit', [ProductController::class, 'edit']);
+  Route::post('/{id}/edit', [ProductController::class, 'update']);
 });
